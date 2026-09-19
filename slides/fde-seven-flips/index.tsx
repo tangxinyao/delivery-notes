@@ -608,7 +608,7 @@ const Phase = ({
   </div>
 );
 
-const Bar = ({ label, flex, accent }: { label: string; flex: number; accent?: boolean }) => (
+const SplitBar = ({ label, flex, accent }: { label: string; flex: number; accent?: boolean }) => (
   <div style={{ flex }}>
     <div
       style={{
@@ -629,8 +629,8 @@ const S3a: Page = () => (
     <Heading>六周，还是半年</Heading>
 
     <div style={{ display: 'flex', gap: 6, marginTop: 40 }}>
-      <Bar label="技术 6–8 周" flex={30} accent />
-      <Bar label="上线前的其余工作 约 4 个月" flex={70} />
+      <SplitBar label="技术 6–8 周" flex={30} accent />
+      <SplitBar label="上线前的其余工作 约 4 个月" flex={70} />
     </div>
 
     <div className="fdek-flow" style={{ marginTop: 44 }}>
