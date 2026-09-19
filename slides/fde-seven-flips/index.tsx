@@ -23,6 +23,13 @@ const CSS = `
 @keyframes fdek-bloom { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: scale(1); } }
 @keyframes fdek-pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
 @keyframes fdek-slip { from { opacity: 0; transform: translateX(-18px); } to { opacity: 1; transform: translateX(0); } }
+.fdek-flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 56px; }
+.fdek-flow > div { position: relative; display: flex; min-width: 0; }
+.fdek-flow > div > * { flex: 1; }
+.fdek-flow > div + div::before {
+  content: '→'; position: absolute; left: -42px; top: 50%; transform: translateY(-50%);
+  color: var(--osd-accent); font-family: ui-monospace, Menlo, monospace; font-size: 28px; line-height: 1;
+}
 @media (prefers-reduced-motion: reduce) {
   .fdek-anim { animation: none !important; }
 }
@@ -547,36 +554,126 @@ const S2b: Page = () => {
 // ─────────────────────────────── 03 ───────────────────────────────
 
 const S3: Page = () => (
-  <Section n="03" before="以前客户提需求，你评估可行性。" after="现在双方都在猜。" />
+  <Section n="03" before="以前工期看开发量。" after="现在一多半时间花在开发之外。" />
+);
+
+const Phase = ({
+  n,
+  title,
+  dur,
+  detail,
+  accent,
+}: {
+  n: string;
+  title: string;
+  dur: string;
+  detail: string;
+  accent?: boolean;
+}) => (
+  <div
+    style={{
+      flex: 1,
+      minWidth: 0,
+      padding: '26px 28px 30px',
+      border: `1px solid ${accent ? 'var(--osd-accent)' : rule}`,
+      borderTop: `3px solid ${accent ? 'var(--osd-accent)' : rule}`,
+      background: accent ? 'rgba(224,139,62,0.07)' : 'transparent',
+    }}
+  >
+    <div style={{ fontFamily: MONO, fontSize: 20, letterSpacing: '0.18em', color: muted }}>
+      {n}
+    </div>
+    <div
+      style={{
+        fontFamily: 'var(--osd-font-display)',
+        fontSize: 36,
+        fontWeight: 800,
+        lineHeight: 1.2,
+        marginTop: 12,
+      }}
+    >
+      {title}
+    </div>
+    <div
+      style={{
+        fontFamily: MONO,
+        fontSize: 24,
+        color: accent ? 'var(--osd-accent)' : dim,
+        marginTop: 14,
+      }}
+    >
+      {dur}
+    </div>
+    <div style={{ fontSize: 26, lineHeight: 1.5, color: dim, marginTop: 14 }}>{detail}</div>
+  </div>
+);
+
+const Bar = ({ label, flex, accent }: { label: string; flex: number; accent?: boolean }) => (
+  <div style={{ flex }}>
+    <div
+      style={{
+        fontFamily: MONO,
+        fontSize: 22,
+        color: accent ? 'var(--osd-accent)' : muted,
+        marginBottom: 10,
+      }}
+    >
+      {label}
+    </div>
+    <div style={{ height: 14, background: accent ? 'var(--osd-accent)' : rule }} />
+  </div>
 );
 
 const S3a: Page = () => (
-  <Shell eyebrow="03 · 期望管理成了技术活">
+  <Shell eyebrow="03 · 工期怎么估">
     <Heading>六周，还是半年</Heading>
-    <div style={{ marginTop: 44 }}>
+
+    <div style={{ display: 'flex', gap: 6, marginTop: 40 }}>
+      <Bar label="技术 6–8 周" flex={30} accent />
+      <Bar label="上线前的其余工作 约 4 个月" flex={70} />
+    </div>
+
+    <div className="fdek-flow" style={{ marginTop: 44 }}>
       <Steps>
         <Step>
-          <Row k="2023" v="OpenAI 第一个部署 GPT-4 的企业客户。" src="ZenML LLMOps DB" />
+          <Phase
+            n="STEP 01"
+            title="搭技术管线"
+            dur="6–8 周"
+            detail="检索优化、guardrails、基础 eval。"
+            accent
+          />
         </Step>
         <Step>
-          <Row k="难点" v="当时 RAG 还不是既成范式，检索调优是自己做的。" />
+          <Phase n="STEP 02" title="Pilot 试点" dur="小范围真实使用" detail="把管线放进真实业务流里跑。" />
         </Step>
         <Step>
-          <Row k="6–8 周" v="技术管线建完：检索优化、guardrails、基础 eval。" />
+          <Phase n="STEP 03" title="反馈迭代" dur="4 个月里的大头" detail="用户反馈、改提示、补 eval、再跑。" />
         </Step>
         <Step>
-          <Row k="+4 个月" v="pilot、用户反馈、迭代，然后才真正上线。" />
-        </Step>
-        <Step>
-          <Row k="所以" v="技术只占交付周期的三分之一。" />
+          <Phase n="STEP 04" title="正式上线" dur="第 6 个月前后" detail="2023 年 OpenAI 首个 GPT-4 企业客户。" />
         </Step>
       </Steps>
+    </div>
+
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'baseline',
+        marginTop: 38,
+        paddingTop: 22,
+        borderTop: `1px solid ${rule}`,
+      }}
+    >
+      <div style={{ fontSize: 30, color: dim }}>技术只占交付周期的三分之一。</div>
+      <div style={{ fontFamily: MONO, fontSize: 20, color: muted }}>ZenML LLMOps DB</div>
     </div>
   </Shell>
 );
 
 const S3b: Page = () => (
-  <Shell eyebrow="03 · 期望管理成了技术活">
+  <Shell eyebrow="03 · 工期怎么估">
     <Heading>这几种活别接</Heading>
     <div style={{ marginTop: 44 }}>
       <Steps>
