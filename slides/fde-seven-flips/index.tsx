@@ -1,6 +1,14 @@
 import type { ReactNode } from 'react';
 import type { DesignSystem, Page, SlideMeta, SlideTransition } from '@open-slide/core';
-import { ImagePlaceholder, Step, Steps, useIsActivePage } from '@open-slide/core';
+import { Step, Steps, useIsActivePage } from '@open-slide/core';
+
+import codexShot from '@assets/codex.webp';
+import claudeCodeShot from '@assets/claude-code.webp';
+import cursorShot from '@assets/cursor-agent.webp';
+import workbuddyClip from '@assets/workbuddy.mp4';
+import appfolioShot from '@assets/customers-appfolio-structure.png';
+import klarnaShot from '@assets/klarna.webp';
+import uberShot from '@assets/uber.webp';
 
 export const design: DesignSystem = {
   palette: { bg: '#0d0e10', text: '#edece7', accent: '#e08b3e' },
@@ -814,12 +822,14 @@ const Shot = ({
   name,
   kind,
   note,
-  hint,
+  src,
+  video,
 }: {
   name: string;
   kind: string;
   note: string;
-  hint: string;
+  src: string;
+  video?: boolean;
 }) => (
   <div style={{ flex: 1, minWidth: 0 }}>
     <div
@@ -832,7 +842,22 @@ const Shot = ({
         display: 'flex',
       }}
     >
-      <ImagePlaceholder hint={hint} style={{ flex: 1, width: '100%', height: '100%' }} />
+      {video ? (
+        <video
+          src={src}
+          autoPlay
+          muted
+          loop
+          playsInline
+          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}
+        />
+      ) : (
+        <img
+          src={src}
+          alt={name}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}
+        />
+      )}
     </div>
     <div
       style={{
@@ -853,13 +878,13 @@ const Shot = ({
 const Case = ({
   eyebrow,
   heading,
-  hint,
+  src,
   caption,
   children,
 }: {
   eyebrow: string;
   heading: string;
-  hint: string;
+  src: string;
   caption: string;
   children: ReactNode;
 }) => (
@@ -877,7 +902,11 @@ const Case = ({
             overflow: 'hidden',
           }}
         >
-          <ImagePlaceholder hint={hint} style={{ flex: 1, width: '100%', height: '100%' }} />
+          <img
+            src={src}
+            alt={caption}
+            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+          />
         </div>
         <div style={{ fontFamily: MONO, fontSize: 20, color: muted, marginTop: 16 }}>{caption}</div>
       </div>
@@ -904,25 +933,26 @@ const S4a3: Page = () => (
         kind="CODING"
         name="OpenAI Codex"
         note="给一句需求，它自己读仓库、改文件、跑测试，不过就再来一轮。"
-        hint="Codex 云端任务界面：任务列表与 diff 视图"
+        src={codexShot}
       />
       <Shot
         kind="CODING"
         name="Claude Code"
         note="终端里一个裸循环：想一步、调一个工具、看结果、再想。"
-        hint="Claude Code 终端截图：工具调用与文件编辑过程"
+        src={claudeCodeShot}
       />
       <Shot
         kind="IDE"
         name="Cursor Agent"
         note="编辑器里跨文件自主改，步数不定，人只在最后审 diff。"
-        hint="Cursor Agent 面板截图：多文件改动与接受/拒绝"
+        src={cursorShot}
       />
       <Shot
         kind="ENTERPRISE"
         name="WorkBuddy"
         note="企业内通用助手，任务来了自己决定查哪张表、调哪个系统。"
-        hint="WorkBuddy 对话界面截图：一次带工具调用的问答"
+        src={workbuddyClip}
+        video
       />
     </div>
     <div style={{ fontSize: 29, color: muted, marginTop: 40 }}>
@@ -936,7 +966,7 @@ const S4a4: Page = () => (
   <Case
     eyebrow="04 · 非 ReAct 范式 ①"
     heading="AppFolio Realm-X：图编排，不是自由循环"
-    hint="AppFolio Realm-X copilot 界面截图"
+    src={appfolioShot}
     caption="AppFolio Realm-X · 物业管理 copilot"
   >
     <Beat k="形态" v="意图分类 → 取数 → 生成 → 校验 → 落动作，一张写死的图。" />
@@ -954,7 +984,7 @@ const S4a5: Page = () => (
   <Case
     eyebrow="04 · 非 ReAct 范式 ②"
     heading="客服：分诊图跑主干，模型只管理解"
-    hint="Klarna AI 助手或 Vodafone Super TOBi 对话界面截图"
+    src={klarnaShot}
     caption="Klarna AI Assistant / Vodafone-Fastweb Super TOBi"
   >
     <Beat k="形态" v="分诊 → 查账户 → 命中固定动作 → 生成话术 → 兜底转人工。" />
@@ -972,7 +1002,7 @@ const S4a6: Page = () => (
   <Case
     eyebrow="04 · 非 ReAct 范式 ③"
     heading="Uber：流水线式改造，编译器当裁判"
-    hint="Uber 单测生成/代码迁移工具界面或流水线截图"
+    src={uberShot}
     caption="Uber · 大规模代码迁移与单测生成"
   >
     <Beat k="形态" v="扫描目标 → 定位改动点 → 模型出补丁 → 编译与测试门禁 → 失败回修。" />
