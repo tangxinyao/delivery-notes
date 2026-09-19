@@ -323,7 +323,7 @@ const ThreeNumbers: Page = () => (
   </Shell>
 );
 
-// ─────────────────────────────── 03 七个翻转 ───────────────────────────────
+// ─────────────────────────────── 03 七个───────────────────────────────
 
 const FlipLine = ({ n, before, after }: { n: string; before: string; after: string }) => (
   <div
@@ -344,15 +344,14 @@ const FlipLine = ({ n, before, after }: { n: string; before: string; after: stri
 
 const Agenda: Page = () => (
   <Shell eyebrow="目录">
-    <Heading>七件事变了</Heading>
+    <Heading>交付大模型和以前有什么不一样？</Heading>
     <div style={{ marginTop: 40 }}>
-      <FlipLine n="01" before="先写需求文档" after="eval 就是需求文档" />
+      <FlipLine n="01" before="文档体现需求" after="评测体现需求" />
       <FlipLine n="02" before="功能跑通就算过" after="跑通一次不算数" />
-      <FlipLine n="03" before="客户提需求，你评估" after="双方都在猜" />
-      <FlipLine n="04" before="程序不会自作主张" after="它会" />
-      <FlipLine n="05" before="接口定死就完了" after="上下文就是产品" />
-      <FlipLine n="06" before="性能是非功能需求" after="快慢也是对错" />
-      <FlipLine n="07" before="交完就稳定了" after="交付物有保质期" />
+      <FlipLine n="03" before="接口是产品" after="上下文是产品" />
+      <FlipLine n="04" before="软件不会自作主张" after="大模型有概率出错" />
+      <FlipLine n="05" before="性能是非功能需求" after="性能影响极大" />
+      <FlipLine n="06" before="功能交完就稳定了" after="随着模型迭代，交付物有保质期" />
     </div>
   </Shell>
 );
@@ -423,30 +422,24 @@ const Section = ({
   );
 };
 
-// ─────────────────────────────── 翻转 01 ───────────────────────────────
+// ─────────────────────────────── 01 ───────────────────────────────
 
 const S1: Page = () => (
-  <Section n="01" before="以前先写需求文档，再开发。" after="现在你写不出来。" />
+  <Section n="01" before="从前，先有文档，再有开发。" after="现在没有办法一步到位" />
 );
 
 const S1a: Page = () => (
-  <Shell eyebrow="翻转 01 · eval 就是需求文档">
+  <Shell eyebrow="01 · 评测体现需求">
     <Heading>标准和打分，谁先来</Heading>
     <div style={{ marginTop: 44 }}>
       <div
         style={{
-          borderLeft: `3px solid var(--osd-accent)`,
-          paddingLeft: 36,
-          fontSize: 44,
-          lineHeight: 1.45,
-          fontWeight: 600,
+          fontSize: 36,
         }}
       >
-        你需要评判标准来给输出打分。
-        <br />
-        可给输出打分这件事，才帮你定义出标准。
+        我们需要标准来定义问题，但是没有看到模型输出，往往意识不到问题是什么。
       </div>
-      <div style={{ fontFamily: MONO, fontSize: 22, color: muted, marginTop: 24, paddingLeft: 39 }}>
+      <div style={{ fontFamily: MONO, fontSize: 22, color: muted, marginTop: 24 }}>
         EvalGen · arXiv 2404.12272
       </div>
     </div>
@@ -467,7 +460,7 @@ const S1a: Page = () => (
 );
 
 const S1b: Page = () => (
-  <Shell eyebrow="翻转 01 · eval 就是需求文档">
+  <Shell eyebrow="01 · 评测体现需求">
     <Heading>那两小时怎么用</Heading>
     <div style={{ marginTop: 44 }}>
       <Steps>
@@ -491,14 +484,14 @@ const S1b: Page = () => (
   </Shell>
 );
 
-// ─────────────────────────────── 翻转 02 ───────────────────────────────
+// ─────────────────────────────── 02 ───────────────────────────────
 
 const S2: Page = () => (
   <Section n="02" before="以前功能跑通就算过。" after="现在跑通一次不算数。" />
 );
 
 const S2a: Page = () => (
-  <Shell eyebrow="翻转 02 · 会不会，还是稳不稳">
+  <Shell eyebrow="02 · 会不会，还是稳不稳">
     <Heading>pass@k 和 pass^k</Heading>
     <div style={{ display: 'flex', gap: 80, marginTop: 56 }}>
       <Col tag="PASS @ K" title="k 次里至少成一次">
@@ -521,7 +514,7 @@ const S2a: Page = () => (
 const S2b: Page = () => {
   const active = useIsActivePage();
   return (
-    <Shell eyebrow="翻转 02 · 会不会，还是稳不稳">
+    <Shell eyebrow="02 · 会不会，还是稳不稳">
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 90, marginTop: 30 }}>
         <div
           className="fdek-anim"
@@ -551,14 +544,14 @@ const S2b: Page = () => {
   );
 };
 
-// ─────────────────────────────── 翻转 03 ───────────────────────────────
+// ─────────────────────────────── 03 ───────────────────────────────
 
 const S3: Page = () => (
   <Section n="03" before="以前客户提需求，你评估可行性。" after="现在双方都在猜。" />
 );
 
 const S3a: Page = () => (
-  <Shell eyebrow="翻转 03 · 期望管理成了技术活">
+  <Shell eyebrow="03 · 期望管理成了技术活">
     <Heading>六周，还是半年</Heading>
     <div style={{ marginTop: 44 }}>
       <Steps>
@@ -583,7 +576,7 @@ const S3a: Page = () => (
 );
 
 const S3b: Page = () => (
-  <Shell eyebrow="翻转 03 · 期望管理成了技术活">
+  <Shell eyebrow="03 · 期望管理成了技术活">
     <Heading>这几种活别接</Heading>
     <div style={{ marginTop: 44 }}>
       <Steps>
@@ -607,14 +600,14 @@ const S3b: Page = () => (
   </Shell>
 );
 
-// ─────────────────────────────── 翻转 04 ───────────────────────────────
+// ─────────────────────────────── 04 ───────────────────────────────
 
 const S4: Page = () => (
   <Section n="04" before="以前程序不会自作主张。" after="现在它会。" />
 );
 
 const S4a: Page = () => (
-  <Shell eyebrow="翻转 04 · 它不该自己做主">
+  <Shell eyebrow="04 · 它不该自己做主">
     <Heading>谁管什么</Heading>
     <div style={{ display: 'flex', gap: 80, marginTop: 52 }}>
       <Col tag="归代码" title="不能错的" accent>
@@ -637,7 +630,7 @@ const S4a: Page = () => (
 );
 
 const S4b: Page = () => (
-  <Shell eyebrow="翻转 04 · 它不该自己做主">
+  <Shell eyebrow="04 · 它不该自己做主">
     <Heading>选架构，是选你能忍的代价</Heading>
     <div style={{ marginTop: 44 }}>
       <Steps>
@@ -661,14 +654,14 @@ const S4b: Page = () => (
   </Shell>
 );
 
-// ─────────────────────────────── 翻转 05 ───────────────────────────────
+// ─────────────────────────────── 05 ───────────────────────────────
 
 const S5: Page = () => (
   <Section n="05" before="以前接口定死就完了。" after="现在上下文就是产品。" />
 );
 
 const S5a: Page = () => (
-  <Shell eyebrow="翻转 05 · 上下文就是产品">
+  <Shell eyebrow="05 · 上下文就是产品">
     <Heading>本体不是文档</Heading>
     <div style={{ marginTop: 44 }}>
       <Steps>
@@ -693,7 +686,7 @@ const S5a: Page = () => (
 );
 
 const S5b: Page = () => (
-  <Shell eyebrow="翻转 05 · 上下文就是产品">
+  <Shell eyebrow="05 · 上下文就是产品">
     <Heading>三天出活的那三天</Heading>
     <div style={{ marginTop: 44 }}>
       <Steps>
@@ -717,7 +710,7 @@ const S5b: Page = () => (
   </Shell>
 );
 
-// ─────────────────────────────── 翻转 06 ───────────────────────────────
+// ─────────────────────────────── 06 ───────────────────────────────
 
 const S6: Page = () => (
   <Section n="06" before="以前性能是非功能需求。" after="现在快慢也是对错。" />
@@ -774,7 +767,7 @@ const Why = ({
 );
 
 const S6a: Page = () => (
-  <Shell eyebrow="翻转 06 · 先问数据出不出域">
+  <Shell eyebrow="06 · 先问数据出不出域">
     <Heading>本地部署不是技术偏好，是三条硬约束</Heading>
     <div style={{ display: 'flex', gap: 60, marginTop: 48 }}>
       <Why
@@ -801,7 +794,7 @@ const S6a: Page = () => (
 );
 
 const S6b: Page = () => (
-  <Shell eyebrow="翻转 06 · 先问数据出不出域">
+  <Shell eyebrow="06 · 先问数据出不出域">
     <Heading>谁必须本地，谁不必</Heading>
     <div style={{ marginTop: 36 }}>
       <Steps>
@@ -896,7 +889,7 @@ const Rung = ({
 );
 
 const S6c: Page = () => (
-  <Shell eyebrow="翻转 06 · 显卡天梯图">
+  <Shell eyebrow="06 · 显卡天梯图">
     <Heading>显存决定能不能跑，带宽决定跑多快</Heading>
     <div style={{ marginTop: 20 }}>
       <div
@@ -964,7 +957,7 @@ const Note = ({ k, v }: { k: string; v: string }) => (
 );
 
 const S6de: Page = () => (
-  <Shell eyebrow="翻转 06 · 什么机器跑什么模型">
+  <Shell eyebrow="06 · 什么机器跑什么模型">
     <Heading>客户手上那台机器，能跑多大</Heading>
     <div style={{ display: 'flex', gap: 96, marginTop: 40 }}>
       <div style={{ flex: 1 }}>
@@ -1034,7 +1027,7 @@ const Bar = ({
 );
 
 const S6f: Page = () => (
-  <Shell eyebrow="翻转 06 · 快慢也是对错">
+  <Shell eyebrow="06 · 快慢也是对错">
     <Heading>引擎选错，差 19 倍</Heading>
     <div style={{ marginTop: 34 }}>
       <Bar name="vLLM" value="793 tok/s" width={800} accent />
@@ -1051,7 +1044,7 @@ const S6f: Page = () => (
 
 // 06g — 选型决策树
 const S6g: Page = () => (
-  <Shell eyebrow="翻转 06 · 快慢也是对错">
+  <Shell eyebrow="06 · 快慢也是对错">
     <Heading>选型只取决于一个问题：几个并发用户</Heading>
     <div style={{ marginTop: 34 }}>
       <Steps>
@@ -1083,7 +1076,7 @@ const S6g: Page = () => (
 
 // 06h — 体验阈值
 const S6h: Page = () => (
-  <Shell eyebrow="翻转 06 · 快慢也是对错">
+  <Shell eyebrow="06 · 快慢也是对错">
     <Heading>用户感知的第一指标</Heading>
     <div style={{ marginTop: 44 }}>
       <Steps>
@@ -1107,14 +1100,14 @@ const S6h: Page = () => (
   </Shell>
 );
 
-// ─────────────────────────────── 翻转 07 ───────────────────────────────
+// ─────────────────────────────── 07 ───────────────────────────────
 
 const S7: Page = () => (
   <Section n="07" before="以前交完就稳定了。" after="现在交付物有保质期。" />
 );
 
 const S7a: Page = () => (
-  <Shell eyebrow="翻转 07 · 交付物有保质期">
+  <Shell eyebrow="07 · 交付物有保质期">
     <Heading>交接算不算完成</Heading>
     <div style={{ marginTop: 44 }}>
       <Steps>
