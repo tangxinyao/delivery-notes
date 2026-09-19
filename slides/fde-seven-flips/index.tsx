@@ -469,23 +469,76 @@ const S1a: Page = () => (
 
 const S1b: Page = () => (
   <Shell eyebrow="01 · 评测体现需求">
-    <Heading>那两小时怎么用</Heading>
+    <Heading>标准在专家脑子里，但他说不出来</Heading>
     <div style={{ marginTop: 44 }}>
       <Steps>
         <Step>
-          <Row k="方法" v="Critical Decision Method，认知任务分析的一种。" src="Human Factors 1998" />
+          <Row k="现状" v="问「你怎么判断这份输出好不好」，得到的是一句正确的废话。" />
         </Step>
         <Step>
-          <Row k="做法" v="锚定一个真实的困难案例，做四遍回溯。" />
+          <Row k="原因" v="熟练判断已经自动化，专家能做对，但讲不出依据。" src="Human Factors 1998" />
         </Step>
         <Step>
-          <Row k="第二遍" v="在时间线上标出决策点。" />
+          <Row k="所以" v="问卷和需求会议问不出 rubric，得换一种问法。" />
+        </Step>
+        <Step>
+          <Row k="方法" v="Critical Decision Method，认知任务分析里最成熟的一种访谈。" />
+        </Step>
+        <Step>
+          <Row k="思路" v="不问规则，问一个他亲历的难案子，从事件里把规则倒推出来。" />
+        </Step>
+      </Steps>
+    </div>
+  </Shell>
+);
+
+const S1c: Page = () => (
+  <Shell eyebrow="01 · 评测体现需求">
+    <Heading>一场访谈：两小时，四遍回溯</Heading>
+    <div style={{ marginTop: 44 }}>
+      <Steps>
+        <Step>
+          <Row k="准备" v="一到两位资深专家，锚定一个他处理过的真实困难案例。" />
+        </Step>
+        <Step>
+          <Row k="第一遍" v="让他从头讲一遍经过，不打断，先拿到完整故事。" />
+        </Step>
+        <Step>
+          <Row k="第二遍" v="一起把故事画成时间线，标出他做过判断的每个节点。" />
         </Step>
         <Step>
           <Row k="第三遍" v="逐点追问：当时看到什么线索，有哪些备选，为什么排除。" />
         </Step>
         <Step>
-          <Row k="产出" v="两小时能挖出 15–25 个决策点，这就是专家轨迹。" src="OpenAI FDE" />
+          <Row k="第四遍" v="设问：如果新人来做，他会在哪一步做错。" />
+        </Step>
+      </Steps>
+    </div>
+  </Shell>
+);
+
+const S1c2: Page = () => (
+  <Shell eyebrow="01 · 评测体现需求">
+    <Heading>一个真实的例子</Heading>
+    <div style={{ fontSize: 34, color: dim, marginTop: 36, lineHeight: 1.5 }}>
+      CDM 最早就是这么问出来的：一位消防队长在厨房火灾现场，突然下令全队撤出，事后自己说不清为什么。
+    </div>
+    <div style={{ marginTop: 40 }}>
+      <Steps>
+        <Step>
+          <Row k="第一遍" v="他的说法是「感觉不对」，讲完故事仍然没有依据。" />
+        </Step>
+        <Step>
+          <Row k="第三遍" v="追问线索，才想起：浇水没效果、屋里异常安静、脚下烫得反常。" />
+        </Step>
+        <Step>
+          <Row k="真相" v="火不在厨房，在地下室。撤出后几秒，客厅地板塌了。" src="Klein · RPD 研究" />
+        </Step>
+        <Step>
+          <Row k="拿到的" v="三条可写成判据的线索，和一条「现象与预期不符就撤」的规则。" />
+        </Step>
+        <Step>
+          <Row k="换到交付" v="同样四遍，两小时能挖出 15–25 个决策点，直接落成评测用例。" src="OpenAI FDE" />
         </Step>
       </Steps>
     </div>
@@ -1648,7 +1701,9 @@ export const notes: (string | undefined)[] = [
   '快速念一遍就行，不要逐条解释，后面每条都有单独一页。',
   '这是最反直觉的一条，慢一点。',
   '重点讲循环依赖：你不可能在第一次会议上从专家嘴里拿到完整 rubric，不是他不专业，是原理上做不到。',
-  'CDM 是 1998 年的成熟方法，不是我们发明的。要点：带着真实输出去见专家，别带问卷。',
+  '这页回答「为什么非得访谈」：不是专家不配合，是熟练判断已经自动化，他真的说不出来。所以问卷和需求会议注定问不出 rubric。',
+  '这页是操作手册，可以让听众记下来：一个真实难案例，四遍回溯，第三遍最值钱——线索、备选、为什么排除。',
+  '消防队长这个案例是 CDM 的起点，讲慢一点，尤其是「第一遍他只会说感觉不对」这句——对应到交付就是客户说「这个回答不专业」。最后一行把它拉回评测用例。',
   '这一条最好用现场例子：demo 演示三次成功，上线第二周出事。',
   '强调上标的方向：@ 是至少一次，^ 是每一次。',
   '这页停久一点，让数字砸下去。',
@@ -1690,6 +1745,8 @@ export default [
   S1,
   S1a,
   S1b,
+  S1c,
+  S1c2,
   S2,
   S2a,
   S2b,
