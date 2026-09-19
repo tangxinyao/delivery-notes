@@ -781,22 +781,22 @@ const S4a: Page = () => (
 
 const S4a2: Page = () => (
   <Shell eyebrow="04 · 消除不确定性">
-    <Heading>先问要不要，再问怎么排</Heading>
+    <Heading>评估是否需要上大模型</Heading>
     <div style={{ marginTop: 44 }}>
       <Steps>
         <Step>
-          <Row k="不上" v="抖音那种 feed 流，目标可度量、规则加排序模型已经够好，LLM 只是加延迟和方差。" />
+          <Row k="不动" v="抖音那种 feed 流，基础设施已经够好，LLM 只会增加延迟和费用。" />
         </Step>
         <Step>
-          <Row k="固定流程" v="知识库、审单、抽取：流程本来就定死，只在说不清的那几个节点调模型，LangGraph 这类图编排就够。" />
+          <Row k="Workflow" v="知识库,审批流：流程是固定的，只在说不清的那几个节点调模型，LangGraph 就够。" />
         </Step>
         <Step>
-          <Row k="动态编排" v="步数不确定、工具组合随输入变，才需要模型自己决定下一步——也才轮到 agent 循环。" />
+          <Row k="动态编排" v="步数不确定、工具组合随输入变，才需要模型自己决定下一步，也才轮到 agent loop。" />
         </Step>
         <Step>
           <Row
             k="实证"
-            v="AppFolio 的 Realm-X 从自由 agent 换成 LangGraph 显式编排后，回答准确率翻倍。"
+            v="AppFolio 的 Realm-X 从换成 LangGraph 显式编排后，回答准确率翻倍。"
             src="LangChain 客户案例"
           />
         </Step>
@@ -1013,7 +1013,7 @@ const S4b: Page = () => (
 // ─────────────────────────────── 05 ───────────────────────────────
 
 const S5: Page = () => (
-  <Section n="05" before="以前接口定死就完了。" after="现在上下文就是产品。" />
+  <Section n="05" before="以前接口是产品" after="现在上下文是产品" />
 );
 
 const S5a: Page = () => (
@@ -1069,7 +1069,7 @@ const S5b: Page = () => (
 // ─────────────────────────────── 06 ───────────────────────────────
 
 const S6: Page = () => (
-  <Section n="06" before="以前性能是非功能需求。" after="现在快慢也是对错。" />
+  <Section n="06" before="以前性能是性能是非功能需求" after="现在性能影响极大" />
 );
 
 // 06a — 为什么必须本地
@@ -1267,19 +1267,19 @@ const S6c: Page = () => (
         <span style={{ width: 210 }}>参考价 USD</span>
         <span style={{ flex: 1, textAlign: 'right' }}>占有率 / 装机</span>
       </div>
-      <Rung first tier="T0 数据中心" gpu="B300 (Blackwell Ultra)" vram="288 GB" bw="8.0 TB/s" bwBar={248} fit="235B · 256K" price="~4.0 万" share="2026-01 起量产" />
+      <Rung first accent tier="T0 数据中心" gpu="B300" vram="288 GB" bw="8.0 TB/s" bwBar={248} fit="235B · 256K" price="~4.0 万" share="2026-01 起量产" />
       <Rung gpu="B200" vram="192 GB" bw="8.0 TB/s" bwBar={248} fit="200B · 128K" price="3.0–5.0 万" share="云厂新增主力" />
       <Rung gpu="H200" vram="141 GB" bw="4.8 TB/s" bwBar={149} fit="120B · 64K" price="~3.1 万" share="租赁最普及" />
-      <Rung first accent tier="T1 专业单卡" gpu="RTX PRO 6000 Blackwell" vram="96 GB" bw="1792 GB/s" bwBar={56} fit="70B · 64K" price="1.33 万" share="单机首选" />
+      <Rung first accent tier="T1 专业单卡" gpu="RTX PRO 6000" vram="96 GB" bw="1792 GB/s" bwBar={56} fit="70B · 64K" price="1.33 万" share="单机首选" />
       <Rung gpu="A100 80G" vram="80 GB" bw="2.0 TB/s" bwBar={62} fit="70B · 32K" price="二手 0.8–1.2 万" share="存量退役中" />
       <Rung first accent tier="T2 消费旗舰" gpu="RTX 5090" vram="32 GB" bw="1792 GB/s" bwBar={56} fit="32B · 64K" price="街价 3,700+" share="Steam 0.41%" />
       <Rung gpu="RTX 4090" vram="24 GB" bw="1008 GB/s" bwBar={31} fit="32B · 16K" price="二手 1,200–1,500" share="Steam 0.90%" />
       <Rung gpu="Radeon RX 7900 XTX" vram="24 GB" bw="960 GB/s" bwBar={30} fit="32B · 16K" price="749–899" share="A 卡旗舰" />
-      <Rung first tier="T3 消费中端" gpu="RTX 5080 / 4070 Ti S" vram="16 GB" bw="672–960 GB/s" bwBar={23} fit="14B · 32K" price="~1,000 起" share="50 系合计 13.4%" />
+      <Rung first accent tier="T3 消费中端" gpu="RTX 5080" vram="16 GB" bw="672–960 GB/s" bwBar={23} fit="14B · 32K" price="~1,000 起" share="50 系合计 13.4%" />
       <Rung gpu="RTX 3060 12G" vram="12 GB" bw="360 GB/s" bwBar={11} fit="8B · 16K" price="二手 ~250" share="Steam 第一 3.99%" />
-      <Rung first tier="T4 统一内存" gpu="Mac M3 Ultra" vram="512 GB" bw="819 GB/s" bwBar={25} fit="235B · 128K" price="~0.95 万" share="不在统计内" />
+      <Rung first accent tier="T4 统一内存" gpu="Mac M3 Ultra" vram="512 GB" bw="819 GB/s" bwBar={25} fit="235B · 128K" price="~0.95 万" share="不在统计内" />
       <Rung gpu="Mac M4 / M5 Max" vram="128 GB" bw="546 GB/s" bwBar={17} fit="70B · 64K" price="0.40–0.50 万" share="不在统计内" />
-      <Rung gpu="NVIDIA DGX Spark (GB10)" vram="128 GB" bw="273 GB/s" bwBar={8} fit="120B · 32K" price="4,699" share="不在统计内" />
+      <Rung gpu="NVIDIA DGX Spark" vram="128 GB" bw="273 GB/s" bwBar={8} fit="120B · 32K" price="4,699" share="不在统计内" />
     </div>
     <div style={{ fontFamily: MONO, fontSize: 16, color: muted, marginTop: 10, lineHeight: 1.4 }}>
       柱长按带宽真实比例 · 上下文为按剩余显存反推的量级估算 · 价格为 2026-09 参考量级，消费卡街价波动极大
