@@ -67,6 +67,44 @@
 
 → NPU 的强项在 **prefill 的稠密矩阵乘**；decode 阶段优势不明显。由此衍生出 **NPU 做 prefill + GPU 做 decode** 的拆分推理方案。[13]
 
+### 1.7 显卡天梯图（本地部署容量 × 速度）
+
+本地部署的两个硬约束是 **显存装不装得下** 和 **带宽跑不跑得快**。decode 阶段是**内存带宽受限**的，经验公式：
+
+```
+decode 吞吐 (tok/s) ≈ 显存带宽 (GB/s) ÷ 每 token 读取的权重字节数
+每 token 读取字节数 ≈ 激活参数量 × 每参数字节数（Q4 ≈ 0.55~0.6 B/参数）
+```
+
+→ 所以**同代卡之间，decode 速度几乎正比于显存带宽**；显存容量决定"能不能跑"，带宽决定"跑多快"。[19][20]
+
+| 档位 | 型号 | 显存 | 带宽 | Q4 单卡能装下 | 典型定位 |
+| --- | --- | --- | --- | --- | --- |
+| **T0 数据中心旗舰** | **B200** | 192 GB HBM3e | **~8.0 TB/s** | 200B+ 稠密 / 超大 MoE | 长上下文吞吐为 RTX PRO 6000 的 **~4.9×** [21] |
+| | **H200** | 141 GB HBM3e | ~4.8 TB/s | 120B 级 | 生产集群主力 |
+| | **H100** | 80 GB HBM3 | ~3.35 TB/s | 70B 舒适 | 上一代生产基线 |
+| **T1 专业单卡** | **RTX PRO 6000 Blackwell** | **96 GB** GDDR7 ECC | 1792 GB/s | **70B FP16 / 109B 级 MoE Q4** | 单机最优性价比；30B 上 **~8425 tok/s**，约 5090 的 **1.8×** [21][22] |
+| | **A100 80G** | 80 GB HBM2e | ~2.0 TB/s | 70B | 存量集群 |
+| | **L40S / RTX 6000 Ada** | 48 GB | 864 / 960 GB/s | 32B 舒适，70B 勉强 | 企业机架推理卡 |
+| **T2 消费旗舰** | **RTX 5090** | 32 GB GDDR7 | **1792 GB/s** | **70B Q4 单卡可跑** | 带宽比 4090 高 **77%**；小 batch 下每卡吞吐与 PRO 6000 接近 [20][21] |
+| | **RTX 4090** | 24 GB | 1008 GB/s | 32B 舒适 | 上一代发烧基线 |
+| | **RTX 3090** | 24 GB | 936 GB/s | 32B | 二手性价比之王 |
+| **T3 消费中端** | **RTX 5080** | 16 GB | 960 GB/s | 14B 舒适 | 单人开发机 |
+| | **RTX 4070 Ti S** | 16 GB | 672 GB/s | 14B | — |
+| | **RTX 3060 12G** | 12 GB | 360 GB/s | 7–8B | 入门门槛 |
+| **T4 统一内存** | **M3 Ultra** | 512 GB 统一 | 819 GB/s | **超大 MoE**（容量无敌、带宽一般） | 容量换带宽的另一条路线 |
+| | **M4 / M5 Max** | 128 GB 统一 | 546 GB/s 起 | 70B Q4 | 见 §1.5 |
+
+**读表要点**
+
+1. **先看显存，再看带宽**。装不下就是 0 tok/s，没有中间态；装得下之后速度才由带宽决定。
+2. **小 batch 时，5090 和 PRO 6000 每卡吞吐接近**（带宽相同）—— 差距要到大 batch / 长上下文 / 大模型才拉开，因为那时容量成为瓶颈。[21]
+3. **别忘了 KV cache**。上表"能装下"只算权重；32K 上下文的 KV cache 在 70B 级模型上可以再吃掉十几 GB，实际选型要按目标上下文长度重算。
+4. **多卡不是线性叠加**。要靠张量并行才能把多卡显存合并使用，而 **llama.cpp / Ollama 不做张量并行**（见 §1.4）—— 多卡必须上 vLLM / SGLang / ExLlamaV2。
+5. **统一内存是另一个维度**：M3 Ultra 的 512 GB 能装下任何消费级 GPU 装不下的模型，但 819 GB/s 的带宽决定了它 decode 慢于 5090。**容量优先选 Mac，速度优先选 N 卡。**
+
+---
+
 ---
 
 ## 2. 逐引擎档案
@@ -188,5 +226,11 @@ Apple Silicon 追极限             → mlx-lm（或 Ollama 0.19+ 自动走 MLX�
 | [16] | [Which Quantization Should I Use? 统一评测 llama.cpp 量化 (arXiv 2601.14277)](https://arxiv.org/html/2601.14277v1) |
 | [17] | [SINQ (arXiv 2509.22944)](https://arxiv.org/pdf/2509.22944) |
 | [18] | [In 2026, the Decision Among Local Inference Engines Comes Down to One Question · Sesame Disk](https://sesamedisk.com/llamacpp-vs-vllm-vs-sglang-vs-ollama-2026/) |
+| [19] | [GPU VRAM vs Memory Bandwidth for AI & LLMs · Ocolo](https://blog.ocolo.io/gpu-vram-vs-memory-bandwidth-ai-llm/) |
+| [20] | [GPU Buying Guide for LLMs: RTX 5090 vs H100 vs H200 · Prem AI](https://www.premai.io/blog/gpu-buying-guide-for-llms-rtx-5090-vs-h100-vs-h200-complete-comparison-2026/) / [RTX 5090 vs RTX PRO 6000 Blackwell · Spheron](https://www.spheron.network/blog/rtx-5090-vs-rtx-pro-6000-blackwell-comparison/) |
+| [21] | [GPU Benchmarks for LLM Inference: RTX, H100, B200 · CloudRift](https://www.cloudrift.ai/gpu-benchmarks) / [RTX PRO 6000 vs H100/H200/L40S · CloudRift](https://www.cloudrift.ai/blog/benchmarking-rtx6000-vs-datacenter-gpus) |
+| [22] | [GPU Benchmark for AI and LLM Inference 2026 · VRLA Tech](https://vrlatech.com/gpu-benchmark-ai-llm-2026/) |
 
 > ⚠️ 核实提示：本页性能数字来自第三方 benchmark 博客，**测试环境（GPU 型号、模型、序列长度、并发数）各不相同，不可直接横向相加**。SGLang 的用户名单（xAI/Azure/LinkedIn/Cursor、400k+ GPU）来自 [5]，对外引用前建议找 SGLang 官方 blog 或对应公司工程博客二次确认。
+>
+> ⚠️ **§1.7 天梯图**：显存与带宽为厂商标称规格；"Q4 能装下"一列是按 `0.55~0.6 B/参数` 估算的**工程经验值，未计入 KV cache**，实际选型必须按目标上下文长度重算。decode ≈ 带宽 ÷ 权重字节数 这条经验公式只在 **memory-bound（小 batch）** 时成立，大 batch 下转为 compute-bound，不再适用。

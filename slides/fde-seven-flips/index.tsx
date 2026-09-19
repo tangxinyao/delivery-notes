@@ -762,28 +762,355 @@ const S6: Page = () => (
   <Section n="06" before="以前性能是非功能需求。" after="现在快慢也是对错。" note="翻转 06" />
 );
 
+// 06a — 为什么必须本地
+const Why = ({
+  tag,
+  title,
+  lines,
+  accent,
+}: {
+  tag: string;
+  title: string;
+  lines: string[];
+  accent?: boolean;
+}) => (
+  <div
+    style={{
+      flex: 1,
+      borderTop: `2px solid ${accent ? 'var(--osd-accent)' : rule}`,
+      paddingTop: 28,
+    }}
+  >
+    <div
+      style={{
+        fontFamily: MONO,
+        fontSize: 21,
+        letterSpacing: '0.18em',
+        color: accent ? 'var(--osd-accent)' : muted,
+      }}
+    >
+      {tag}
+    </div>
+    <div
+      style={{
+        fontFamily: 'var(--osd-font-display)',
+        fontSize: 40,
+        fontWeight: 800,
+        marginTop: 16,
+        lineHeight: 1.24,
+      }}
+    >
+      {title}
+    </div>
+    <div style={{ marginTop: 22 }}>
+      {lines.map((l) => (
+        <div key={l} style={{ fontSize: 27, lineHeight: 1.48, color: dim, marginTop: 12 }}>
+          {l}
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
 const S6a: Page = () => (
-  <Shell eyebrow="翻转 06 · 快慢也是对错" note="体验阈值">
-    <Heading>用户感知的第一指标</Heading>
-    <div style={{ marginTop: 44 }}>
+  <Shell eyebrow="翻转 06 · 先问数据出不出域" note="为什么本地">
+    <Heading>本地部署不是技术偏好，是三条硬约束</Heading>
+    <div style={{ display: 'flex', gap: 60, marginTop: 48 }}>
+      <Why
+        tag="合规"
+        title="法规不许出域"
+        lines={['国防 / 军工：绝对不可，涉保密等级', '金融：监管、审计留痕、幻觉责任', '医疗：HIPAA 类，数据必须脱敏']}
+        accent
+      />
+      <Why
+        tag="隐私"
+        title="出域了就收不回"
+        lines={['客户内网数据进第三方 API，无法举证已删除', '断网 / 边缘场景根本没有出域这个选项', '端侧才能做到“数据不离开设备”']}
+      />
+      <Why
+        tag="成本"
+        title="高频调用算得过来"
+        lines={['cost per task 随调用量线性涨', '固定负载下自建摊薄成单位电费', '但低频场景自建更贵——别默认本地']}
+      />
+    </div>
+    <div style={{ fontSize: 30, color: muted, marginTop: 44 }}>
+      三条里只要命中一条，本地就是硬前提；一条都不命中，托管 API 更划算。
+    </div>
+  </Shell>
+);
+
+const S6b: Page = () => (
+  <Shell eyebrow="翻转 06 · 先问数据出不出域" note="行业对照">
+    <Heading>谁必须本地，谁不必</Heading>
+    <div style={{ marginTop: 36 }}>
       <Steps>
         <Step>
-          <Row k="TTFT" v="流式场景下，用户感受到的是“多久开始回话”。" />
+          <Row k="国防 / 军工" v="绝对不出域。本地推理 + local agent，断网可用。" src="纯本地 / 边缘" />
         </Step>
         <Step>
-          <Row k="阈值" v="P50 低于 1 秒算好，P99 低于 3 秒。" />
+          <Row k="金融" v="基本不出域。私有云 + 强 guardrails + 全轨迹可观测。" src="本地 / 私有云" />
         </Step>
         <Step>
-          <Row k="CSAT" v="高于 4.2 算强，低于 3.5 说明用户在忍受。" />
+          <Row k="医疗" v="不可出域。本地 + 人在环，幻觉率是第一指标。" src="本地" />
         </Step>
         <Step>
-          <Row k="成本" v="cost per task 必须和成功率一起看，单看都没意义。" />
+          <Row k="制造 / 能源" v="部分可。边缘做实时推理，云端做训练与聚合。" src="边缘 + 云" />
+        </Step>
+        <Step>
+          <Row k="通用企业流程" v="可出域。要的是速度和 ROI，别自建。" src="云" />
         </Step>
       </Steps>
     </div>
   </Shell>
 );
 
+// 06c — 显卡天梯图
+const Rung = ({
+  tier,
+  gpu,
+  vram,
+  bw,
+  bwBar,
+  fit,
+  first,
+  accent,
+}: {
+  tier?: string;
+  gpu: string;
+  vram: string;
+  bw: string;
+  bwBar: number;
+  fit: string;
+  first?: boolean;
+  accent?: boolean;
+}) => (
+  <div
+    style={{
+      display: 'flex',
+      gap: 22,
+      alignItems: 'center',
+      padding: '13px 0',
+      borderTop: first ? `2px solid ${accent ? 'var(--osd-accent)' : rule}` : `1px solid #17181c`,
+    }}
+  >
+    <div
+      style={{
+        width: 168,
+        flexShrink: 0,
+        fontFamily: MONO,
+        fontSize: 19,
+        letterSpacing: '0.1em',
+        color: accent ? 'var(--osd-accent)' : muted,
+      }}
+    >
+      {first ? tier : ''}
+    </div>
+    <div style={{ width: 290, flexShrink: 0, fontSize: 26, fontWeight: accent ? 700 : 500 }}>{gpu}</div>
+    <div
+      style={{
+        width: 110,
+        flexShrink: 0,
+        fontFamily: MONO,
+        fontSize: 23,
+        color: accent ? 'var(--osd-accent)' : dim,
+        textAlign: 'right',
+      }}
+    >
+      {vram}
+    </div>
+    <div style={{ width: 430, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 14 }}>
+      <div
+        style={{
+          width: bwBar,
+          height: 16,
+          background: accent ? 'var(--osd-accent)' : '#3a3d44',
+        }}
+      />
+      <span style={{ fontFamily: MONO, fontSize: 20, color: muted }}>{bw}</span>
+    </div>
+    <div style={{ flex: 1, fontSize: 24, color: dim, lineHeight: 1.3 }}>{fit}</div>
+  </div>
+);
+
+const S6c: Page = () => (
+  <Shell eyebrow="翻转 06 · 显卡天梯图" note="容量 × 带宽">
+    <Heading>显存决定能不能跑，带宽决定跑多快</Heading>
+    <div style={{ marginTop: 26 }}>
+      <div
+        style={{
+          display: 'flex',
+          gap: 22,
+          fontFamily: MONO,
+          fontSize: 19,
+          color: muted,
+          letterSpacing: '0.12em',
+          paddingBottom: 8,
+        }}
+      >
+        <span style={{ width: 168 }}>档位</span>
+        <span style={{ width: 290 }}>型号</span>
+        <span style={{ width: 110, textAlign: 'right' }}>显存</span>
+        <span style={{ width: 430 }}>显存带宽</span>
+        <span style={{ flex: 1 }}>Q4 单卡能装下</span>
+      </div>
+      <Rung first tier="T0 数据中心" gpu="B200" vram="192 GB" bw="8.0 TB/s" bwBar={330} fit="200B+ 稠密 / 超大 MoE" />
+      <Rung tier="" gpu="H200" vram="141 GB" bw="4.8 TB/s" bwBar={198} fit="120B 级" />
+      <Rung tier="" gpu="H100" vram="80 GB" bw="3.35 TB/s" bwBar={138} fit="70B 舒适" />
+      <Rung first accent tier="T1 专业单卡" gpu="RTX PRO 6000 Blackwell" vram="96 GB" bw="1792 GB/s" bwBar={74} fit="70B FP16 / 109B 级 MoE Q4" />
+      <Rung tier="" gpu="A100 80G" vram="80 GB" bw="2.0 TB/s" bwBar={82} fit="70B" />
+      <Rung tier="" gpu="L40S / RTX 6000 Ada" vram="48 GB" bw="864–960 GB/s" bwBar={38} fit="32B 舒适，70B 勉强" />
+      <Rung first accent tier="T2 消费旗舰" gpu="RTX 5090" vram="32 GB" bw="1792 GB/s" bwBar={74} fit="70B Q4 单卡可跑" />
+      <Rung tier="" gpu="RTX 4090" vram="24 GB" bw="1008 GB/s" bwBar={42} fit="32B 舒适" />
+      <Rung tier="" gpu="RTX 3090" vram="24 GB" bw="936 GB/s" bwBar={39} fit="32B，二手性价比" />
+      <Rung first tier="T3 消费中端" gpu="RTX 5080 / 4070 Ti S" vram="16 GB" bw="672–960 GB/s" bwBar={30} fit="14B 舒适" />
+      <Rung tier="" gpu="RTX 3060 12G" vram="12 GB" bw="360 GB/s" bwBar={15} fit="7–8B，入门门槛" />
+      <Rung first tier="T4 统一内存" gpu="Mac M3 Ultra" vram="512 GB" bw="819 GB/s" bwBar={34} fit="容量无敌，带宽一般：超大 MoE" />
+      <Rung tier="" gpu="Mac M4 / M5 Max" vram="128 GB" bw="546 GB/s" bwBar={23} fit="70B Q4" />
+    </div>
+    <div style={{ fontFamily: MONO, fontSize: 19, color: muted, marginTop: 16 }}>
+      柱长按带宽真实比例 · decode ≈ 带宽 ÷ 每 token 权重字节数（仅小 batch 成立）· 未计 KV cache · docs/research/02 §1.7
+    </div>
+  </Shell>
+);
+
+const S6d: Page = () => (
+  <Shell eyebrow="翻转 06 · 显卡天梯图" note="读表要点">
+    <Heading>这张表怎么用</Heading>
+    <div style={{ marginTop: 36 }}>
+      <Steps>
+        <Step>
+          <Row k="顺序" v="先看显存再看带宽。装不下就是 0 tok/s，没有中间态。" />
+        </Step>
+        <Step>
+          <Row k="反直觉" v="小 batch 下 5090 和 PRO 6000 每卡吞吐接近——带宽相同。差距要到大 batch、长上下文才拉开。" src="CloudRift" />
+        </Step>
+        <Step>
+          <Row k="最常踩" v="“能装下”只算权重。70B 级模型跑 32K 上下文，KV cache 还能再吃十几 GB。" />
+        </Step>
+        <Step>
+          <Row k="多卡" v="不是线性叠加，要靠张量并行才能合并显存——而 llama.cpp / Ollama 不做。" />
+        </Step>
+        <Step>
+          <Row k="路线" v="容量优先选 Mac（M3 Ultra 512 GB），速度优先选 N 卡。统一内存是另一个维度。" />
+        </Step>
+      </Steps>
+    </div>
+  </Shell>
+);
+
+// 06e — 非 GPU 设备：端侧 / Mac / 嵌入式
+const Tier = ({
+  hw,
+  mem,
+  model,
+  perf,
+  engine,
+}: {
+  hw: string;
+  mem: string;
+  model: string;
+  perf: string;
+  engine: string;
+}) => (
+  <div
+    style={{
+      display: 'flex',
+      gap: 28,
+      alignItems: 'baseline',
+      padding: '20px 0',
+      borderTop: `1px solid ${rule}`,
+    }}
+  >
+    <div style={{ width: 230, flexShrink: 0, fontSize: 27, fontWeight: 600 }}>{hw}</div>
+    <div style={{ width: 130, flexShrink: 0, fontFamily: MONO, fontSize: 22, color: muted }}>{mem}</div>
+    <div style={{ flex: 1, fontSize: 27, color: dim, lineHeight: 1.35 }}>{model}</div>
+    <div style={{ width: 260, flexShrink: 0, fontFamily: MONO, fontSize: 21, color: 'var(--osd-accent)' }}>
+      {perf}
+    </div>
+    <div style={{ width: 150, flexShrink: 0, fontFamily: MONO, fontSize: 21, color: muted, textAlign: 'right' }}>
+      {engine}
+    </div>
+  </div>
+);
+
+const S6e: Page = () => (
+  <Shell eyebrow="翻转 06 · 什么机器跑什么模型" note="容量分层">
+    <Heading>客户手上那台机器，能跑多大</Heading>
+    <div style={{ marginTop: 30 }}>
+      <div
+        style={{
+          display: 'flex',
+          gap: 28,
+          fontFamily: MONO,
+          fontSize: 20,
+          color: muted,
+          letterSpacing: '0.12em',
+          paddingBottom: 10,
+        }}
+      >
+        <span style={{ width: 230 }}>硬件</span>
+        <span style={{ width: 130 }}>可用显存</span>
+        <span style={{ flex: 1 }}>能跑的模型（4bit 量化）</span>
+        <span style={{ width: 260 }}>实测量级</span>
+        <span style={{ width: 150, textAlign: 'right' }}>引擎</span>
+      </div>
+      <Tier
+        hw="手机 / NPU 端侧"
+        mem="—"
+        model="1.7B–3B，SmolLM2 / Qwen2.5-3B"
+        perf="prefill 970–1613 tok/s"
+        engine="NPU + GGUF"
+      />
+      <Tier
+        hw="Snapdragon X Elite"
+        mem="—"
+        model="3B 级，离线随身"
+        perf="NPU prefill 是 CPU 的 18×"
+        engine="NPU prefill"
+      />
+      <Tier
+        hw="Raspberry Pi / 嵌入式"
+        mem="4–8 GB"
+        model="1B–3B，极限量化可到 ~1.5 bit"
+        perf="能跑，别谈并发"
+        engine="llama.cpp"
+      />
+      <Tier
+        hw="MacBook（M 系列）"
+        mem="16–64 GB 统一内存"
+        model="7B–14B 舒适，32B 勉强"
+        perf="~230 tok/s，5–7 ms/token"
+        engine="mlx-lm"
+      />
+      <Tier
+        hw="M5 Max 工作站"
+        mem="128 GB 统一内存"
+        model="Qwen3.5-35B-A3B (NVFP4) 等 MoE"
+        perf="prefill 1810 · decode 112 tok/s"
+        engine="MLX"
+      />
+      <Tier
+        hw="单卡 GPU 服务器"
+        mem="24–80 GB"
+        model="14B–70B（4bit），单模型多并发"
+        perf="50 并发 920 tok/s"
+        engine="vLLM"
+      />
+      <Tier
+        hw="多卡 GPU 集群"
+        mem="160 GB+"
+        model="70B+ 全精度、大 MoE，张量并行"
+        perf="≥32 并发时 2–3× llama.cpp"
+        engine="vLLM / SGLang"
+      />
+    </div>
+    <div style={{ fontFamily: MONO, fontSize: 20, color: muted, marginTop: 20 }}>
+      性能数字见 docs/research/02 · 显存与参数量的对应为工程经验值，需按实际上下文长度复核
+    </div>
+  </Shell>
+);
+
+// 06f — 引擎横评
 const Bar = ({
   name,
   value,
@@ -811,17 +1138,76 @@ const Bar = ({
   </div>
 );
 
-const S6b: Page = () => (
+const S6f: Page = () => (
   <Shell eyebrow="翻转 06 · 快慢也是对错" note="同 GPU 同模型">
     <Heading>引擎选错，差 19 倍</Heading>
-    <div style={{ marginTop: 40 }}>
-      <Bar name="vLLM" value="793 tok/s" width={880} accent />
-      <Bar name="Ollama" value="41 tok/s" width={46} />
+    <div style={{ marginTop: 34 }}>
+      <Bar name="vLLM" value="793 tok/s" width={800} accent />
+      <Bar name="Ollama" value="41 tok/s" width={42} />
     </div>
-    <div style={{ marginTop: 40 }}>
+    <div style={{ marginTop: 30 }}>
       <Row k="50 并发" v="920 tok/s 对 155 tok/s。" />
-      <Row k="峰值 P99" v="80 毫秒对 673 毫秒。" src="Red Hat 2026" />
-      <Row k="但是" v="冷启单请求，llama.cpp 的 TTFT 是 8–12 毫秒，最快。" />
+      <Row k="峰值 P99" v="80 毫秒对 673 毫秒。Ollama 在压力下直接趴平。" src="Red Hat 2026" />
+      <Row k="反过来" v="冷启单请求 llama.cpp 的 TTFT 是 8–12 毫秒，比 vLLM 的 16–25 还快。" />
+      <Row k="所以" v="先问负载是单流还是并发，再选引擎。搞反了差一个数量级。" />
+    </div>
+  </Shell>
+);
+
+// 06g — 选型决策树
+const S6g: Page = () => (
+  <Shell eyebrow="翻转 06 · 快慢也是对错" note="选型">
+    <Heading>选型只取决于一个问题：几个并发用户</Heading>
+    <div style={{ marginTop: 34 }}>
+      <Steps>
+        <Step>
+          <Row k="1 个人" v="Ollama（技术用户）/ LM Studio（不碰命令行的人）。五分钟跑起来。" />
+        </Step>
+        <Step>
+          <Row k="嵌入 / 边缘" v="llama.cpp。纯 C/C++ 零依赖，CPU 优先，单流效率最高。" />
+        </Step>
+        <Step>
+          <Row k="Apple 平台" v="mlx-lm，或 Ollama 0.19+ 自动走的 MLX 路径。" />
+        </Step>
+        <Step>
+          <Row k="5–100+ 并发" v="vLLM。PagedAttention + 连续批处理，2026 年的生产默认项。" />
+        </Step>
+        <Step>
+          <Row k="前缀重的负载" v="SGLang。RAG / 多轮 / agent 共享上下文时，比 vLLM 高约 29%。" src="RadixAttention" />
+        </Step>
+        <Step>
+          <Row k="绝对不要" v="多卡上用 llama.cpp / Ollama——它们不做张量并行，白买的卡。" />
+        </Step>
+      </Steps>
+    </div>
+    <div style={{ fontSize: 28, color: muted, marginTop: 34 }}>
+      背景：HuggingFace TGI 已于 2026-03 进入维护模式，官方改荐 vLLM / SGLang / llama.cpp / MLX。
+    </div>
+  </Shell>
+);
+
+// 06h — 体验阈值
+const S6h: Page = () => (
+  <Shell eyebrow="翻转 06 · 快慢也是对错" note="体验阈值">
+    <Heading>用户感知的第一指标</Heading>
+    <div style={{ marginTop: 44 }}>
+      <Steps>
+        <Step>
+          <Row k="TTFT" v="流式场景下，用户感受到的是“多久开始回话”。" />
+        </Step>
+        <Step>
+          <Row k="阈值" v="P50 低于 1 秒算好，P99 低于 3 秒。" />
+        </Step>
+        <Step>
+          <Row k="CSAT" v="高于 4.2 算强，低于 3.5 说明用户在忍受。" />
+        </Step>
+        <Step>
+          <Row k="成本" v="cost per task 必须和成功率一起看，单看都没意义。" />
+        </Step>
+        <Step>
+          <Row k="量化代价" v="Q4_K_M 体积小 2.5×、快约 2×，字段准确率掉约 2.6%——这是要和客户谈的交换。" src="arXiv 2601.14277" />
+        </Step>
+      </Steps>
     </div>
   </Shell>
 );
@@ -1085,9 +1471,15 @@ export const notes: (string | undefined)[] = [
   '上下文工程这个词不用解释，直接讲本体。',
   '重点是最后一条：规则写进 prompt，改一条要重测全部。',
   '这三天是 Palantir 的真实节奏，不是理想化流程。',
-  '这一条业务方最容易忽略：慢就是错。',
-  '阈值都是经验值，不是标准，说的时候要讲清楚。',
-  '柱子按真实比例画。被问细节就说：同 GPU 同模型，Red Hat 2026 的测试。补一句 llama.cpp 单流最快，边缘场景反而选它。',
+  '这一条业务方最容易忽略：慢就是错。先花两页把“为什么要本地”讲清楚，再谈快慢。',
+  '三条理由要分开说：合规是法规不许，隐私是出去了收不回，成本是高频才划算。最后一句是关键——一条都不命中就别自建，本地不是默认答案。',
+  '这页对着客户所在行业念就行。制造能源那行可以展开讲边缘+云的混合。',
+  '天梯图是全场最实用的一页，慢慢过。一句话带出逻辑：显存决定能不能跑，带宽决定跑多快，柱长是带宽真实比例。被问到具体型号就顺着档位念。',
+  '接着讲读表的五条。第二条最反直觉——小 batch 下 5090 和十倍价格的专业卡每卡吞吐接近，很多客户不知道，容易买错。',
+  '这页补 GPU 以外的设备：手机 NPU、树莓派、Mac。做边缘和端侧交付的听众重点看这页。',
+  '柱子按真实比例画。被问细节就说：同 GPU 同模型，Red Hat 2026 的测试。重点落在“反过来”那行——单流 llama.cpp 更快，选型前先问负载形态。',
+  '这页是决策树，可以当交付规范直接用。最后一条“多卡别用 llama.cpp”是最常见的踩坑。',
+  '阈值都是经验值，不是标准，说的时候要讲清楚。量化那条留给技术受众，业务方跳过。',
   '最后一个翻转，也是最容易被跳过的一个。',
   '第五条是重点：模型半年换一代，客户不知道要重新验证，你就留了颗雷。',
   '这句话是 Palantir 的原话，可以直接引用。',
@@ -1118,6 +1510,12 @@ export default [
   S6,
   S6a,
   S6b,
+  S6c,
+  S6d,
+  S6e,
+  S6f,
+  S6g,
+  S6h,
   S7,
   S7a,
   S7b,
