@@ -306,7 +306,7 @@ const Stat = ({ n, unit, text, src }: { n: string; unit?: string; text: string; 
 
 const ThreeNumbers: Page = () => (
   <Shell eyebrow="开场">
-    <Heading>先看三个数字</Heading>
+    <Heading>现状</Heading>
     <div style={{ display: 'flex', gap: 72, marginTop: 64 }}>
       <Stat
         n="95"
@@ -354,11 +354,12 @@ const Agenda: Page = () => (
     <Heading>交付大模型和以前有什么不一样？</Heading>
     <div style={{ marginTop: 40 }}>
       <FlipLine n="01" before="文档体现需求" after="评测体现需求" />
-      <FlipLine n="02" before="功能跑通就算过" after="跑通一次不算数" />
-      <FlipLine n="03" before="接口是产品" after="上下文是产品" />
-      <FlipLine n="04" before="软件不会自作主张" after="大模型有概率出错" />
-      <FlipLine n="05" before="性能是非功能需求" after="性能影响极大" />
-      <FlipLine n="06" before="功能交完就稳定了" after="随着模型迭代，交付物有保质期" />
+      <FlipLine n="02" before="时间花在开发" after="时间花在评测" />
+      <FlipLine n="03" before="功能跑通就算过" after="跑通一次不算数" />
+      <FlipLine n="04" before="接口是产品" after="上下文是产品" />
+      <FlipLine n="05" before="软件不会自作主张" after="大模型有概率出错" />
+      <FlipLine n="06" before="性能是非功能需求" after="性能影响极大" />
+      <FlipLine n="07" before="功能交完就稳定了" after="随着模型迭代，交付物有保质期" />
     </div>
   </Shell>
 );
@@ -432,7 +433,7 @@ const Section = ({
 // ─────────────────────────────── 01 ───────────────────────────────
 
 const S1: Page = () => (
-  <Section n="01" before="从前，先有文档，再有开发。" after="现在没有办法一步到位" />
+  <Section n="01" before="从前：先有文档，再去开发。" after="现在：没有办法一步到位" />
 );
 
 const S1a: Page = () => (
@@ -539,9 +540,8 @@ const S2b: Page = () => {
           <span style={{ fontSize: 120 }}>%</span>
         </div>
         <div style={{ paddingTop: 24, flex: 1 }}>
-          <Row k="场景" v="τ-bench 的 retail 域，pass^8 低于这个数。" />
-          <Row k="同一批" v="GPT-4o 级别的 agent，任务成功率不到 50%。" />
-          <Row k="翻译" v="同一件事做八次全对的概率，不足四分之一。" />
+          <Row k="场景" v="τ-bench 的零售模块，pass^8 低于 25%" />
+          <Row k="翻译" v="GPT-4o + agent，同一件事全对的概率，不足 25%。" />
         </div>
       </div>
       <div style={{ fontFamily: MONO, fontSize: 22, color: muted, marginTop: 34 }}>
@@ -554,7 +554,7 @@ const S2b: Page = () => {
 // ─────────────────────────────── 03 ───────────────────────────────
 
 const S3: Page = () => (
-  <Section n="03" before="以前工期看开发量。" after="现在一多半时间花在开发之外。" />
+  <Section n="03" before="以前工期看开发量。" after="现在时间主要花在评测" />
 );
 
 const Phase = ({
@@ -626,11 +626,11 @@ const SplitBar = ({ label, flex, accent }: { label: string; flex: number; accent
 
 const S3a: Page = () => (
   <Shell eyebrow="03 · 工期怎么估">
-    <Heading>六周，还是半年</Heading>
+    <Heading>开发周期</Heading>
 
     <div style={{ display: 'flex', gap: 6, marginTop: 40 }}>
-      <SplitBar label="技术 6–8 周" flex={30} accent />
-      <SplitBar label="上线前的其余工作 约 4 个月" flex={70} />
+      <SplitBar label="开发 6–8 周" flex={30} accent />
+      <SplitBar label="上线前的其余工作 4 个月" flex={70} />
     </div>
 
     <div className="fdek-flow" style={{ marginTop: 44 }}>
@@ -638,17 +638,17 @@ const S3a: Page = () => (
         <Step>
           <Phase
             n="STEP 01"
-            title="搭技术管线"
+            title="搭建 Pipeline"
             dur="6–8 周"
-            detail="检索优化、guardrails、基础 eval。"
+            detail="检索优化、guardrails、基础评测。"
             accent
           />
         </Step>
         <Step>
-          <Phase n="STEP 02" title="Pilot 试点" dur="小范围真实使用" detail="把管线放进真实业务流里跑。" />
+          <Phase n="STEP 02" title="Pilot 试点" dur="小范围内真实使用" detail="把管线放进真实业务流里跑。" />
         </Step>
         <Step>
-          <Phase n="STEP 03" title="反馈迭代" dur="4 个月里的大头" detail="用户反馈、改提示、补 eval、再跑。" />
+          <Phase n="STEP 03" title="反馈迭代" dur="4 个月里的大头" detail="用户反馈、修改 prompt、补充评测、再跑。" />
         </Step>
         <Step>
           <Phase n="STEP 04" title="正式上线" dur="第 6 个月前后" detail="2023 年 OpenAI 首个 GPT-4 企业客户。" />
@@ -666,7 +666,7 @@ const S3a: Page = () => (
         borderTop: `1px solid ${rule}`,
       }}
     >
-      <div style={{ fontSize: 30, color: dim }}>技术只占交付周期的三分之一。</div>
+      <div style={{ fontSize: 30, color: dim }}>技术只占交付周期的 1/3。</div>
       <div style={{ fontFamily: MONO, fontSize: 20, color: muted }}>ZenML LLMOps DB</div>
     </div>
   </Shell>
@@ -674,23 +674,23 @@ const S3a: Page = () => (
 
 const S3b: Page = () => (
   <Shell eyebrow="03 · 工期怎么估">
-    <Heading>这几种活别接</Heading>
+    <Heading>几个坑点</Heading>
     <div style={{ marginTop: 44 }}>
       <Steps>
         <Step>
-          <Row k="信号 01" v="“这个特例你帮我特判一下”，第三次出现。" />
+          <Row k="01" v="客户多次要求特殊处理某个案例。" />
         </Step>
         <Step>
-          <Row k="信号 02" v="客户不肯给领域专家时间。" />
+          <Row k="02" v="客户不花时间理清问题。" />
         </Step>
         <Step>
-          <Row k="信号 03" v="没有明确的高管 sponsor。" />
+          <Row k="04" v="客户要求当场给一个报价。" src="PostHog 手册" />
         </Step>
         <Step>
-          <Row k="信号 04" v="要求你当场给一个报价。" src="PostHog 手册" />
+          <Row k="03" v="我们没有被高管明确的授权" />
         </Step>
         <Step>
-          <Row k="信号 05" v="问题的价值量级，远低于投入。" src="OpenAI FDE" />
+          <Row k="05" v="问题的价值，远低于解决问题的投入。" src="OpenAI FDE" />
         </Step>
       </Steps>
     </div>
@@ -700,12 +700,12 @@ const S3b: Page = () => (
 // ─────────────────────────────── 04 ───────────────────────────────
 
 const S4: Page = () => (
-  <Section n="04" before="以前程序不会自作主张。" after="现在它会。" />
+  <Section n="04" before="以前软件不会自作主张" after="现在大模型有概率出错" />
 );
 
 const S4a: Page = () => (
-  <Shell eyebrow="04 · 它不该自己做主">
-    <Heading>谁管什么</Heading>
+  <Shell eyebrow="04 · 消除不确定性">
+    <Heading>理清边界</Heading>
     <div style={{ display: 'flex', gap: 80, marginTop: 52 }}>
       <Col tag="归代码" title="不能错的" accent>
         <Line>顶层循环、重试</Line>
@@ -713,7 +713,7 @@ const S4a: Page = () => (
         <Line>业务规则与阈值</Line>
         <Line>权限、配额、超时</Line>
       </Col>
-      <Col tag="归模型" title="说不清的">
+      <Col tag="归模型" title="说不清的" accent>
         <Line>意图识别</Line>
         <Line>非结构化抽取</Line>
         <Line>开放式探索</Line>
@@ -727,7 +727,7 @@ const S4a: Page = () => (
 );
 
 const S4b: Page = () => (
-  <Shell eyebrow="04 · 它不该自己做主">
+  <Shell eyebrow="04 · 消除不确定性">
     <Heading>选架构，是选你能忍的代价</Heading>
     <div style={{ marginTop: 44 }}>
       <Steps>
