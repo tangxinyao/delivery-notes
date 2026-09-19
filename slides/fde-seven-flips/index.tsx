@@ -940,142 +940,67 @@ const S6c: Page = () => (
   </Shell>
 );
 
-const S6d: Page = () => (
-  <Shell eyebrow="翻转 06 · 显卡天梯图">
-    <Heading>这张表怎么用</Heading>
-    <div style={{ marginTop: 36 }}>
-      <Steps>
-        <Step>
-          <Row k="顺序" v="先看显存再看带宽。装不下就是 0 tok/s，没有中间态。" />
-        </Step>
-        <Step>
-          <Row k="反直觉" v="小 batch 下 5090 和 PRO 6000 每卡吞吐接近——带宽相同。差距要到大 batch、长上下文才拉开。" src="CloudRift" />
-        </Step>
-        <Step>
-          <Row k="最常踩" v="“能装下”只算权重。70B 级模型跑 32K 上下文，KV cache 还能再吃十几 GB。" />
-        </Step>
-        <Step>
-          <Row k="多卡" v="不是线性叠加，要靠张量并行才能合并显存——而 llama.cpp / Ollama 不做。" />
-        </Step>
-        <Step>
-          <Row k="路线" v="容量优先选 Mac（M3 Ultra 512 GB），速度优先选 N 卡。统一内存是另一个维度。" />
-        </Step>
-        <Step>
-          <Row k="别误判" v="DGX Spark 装得下 120B，但 273 GB/s 是全表最低带宽——它是开发微调机，不是扛并发的推理服务器。" src="LMSYS 实测" />
-        </Step>
-      </Steps>
-    </div>
-  </Shell>
-);
-
-// 06e — 非 GPU 设备：端侧 / Mac / 嵌入式
-const Tier = ({
-  hw,
-  mem,
-  model,
-  perf,
-  engine,
-}: {
-  hw: string;
-  mem: string;
-  model: string;
-  perf: string;
-  engine: string;
-}) => (
+// 06d — 客户手上那台机器：分档 + 判断法
+const ColTitle = ({ children }: { children: ReactNode }) => (
   <div
     style={{
-      display: 'flex',
-      gap: 28,
-      alignItems: 'baseline',
-      padding: '20px 0',
-      borderTop: `1px solid ${rule}`,
+      fontFamily: MONO,
+      fontSize: 19,
+      color: 'var(--osd-accent)',
+      letterSpacing: '0.14em',
+      paddingBottom: 18,
+      borderBottom: `1px solid ${rule}`,
     }}
   >
-    <div style={{ width: 230, flexShrink: 0, fontSize: 27, fontWeight: 600 }}>{hw}</div>
-    <div style={{ width: 130, flexShrink: 0, fontFamily: MONO, fontSize: 22, color: muted }}>{mem}</div>
-    <div style={{ flex: 1, fontSize: 27, color: dim, lineHeight: 1.35 }}>{model}</div>
-    <div style={{ width: 260, flexShrink: 0, fontFamily: MONO, fontSize: 21, color: 'var(--osd-accent)' }}>
-      {perf}
-    </div>
-    <div style={{ width: 150, flexShrink: 0, fontFamily: MONO, fontSize: 21, color: muted, textAlign: 'right' }}>
-      {engine}
-    </div>
+    {children}
   </div>
 );
 
-const S6e: Page = () => (
+const Note = ({ k, v }: { k: string; v: string }) => (
+  <div style={{ padding: '22px 0', borderBottom: `1px solid ${rule}` }}>
+    <div style={{ fontSize: 28, fontWeight: 600, marginBottom: 8 }}>{k}</div>
+    <div style={{ fontSize: 24, lineHeight: 1.45, color: dim }}>{v}</div>
+  </div>
+);
+
+const S6de: Page = () => (
   <Shell eyebrow="翻转 06 · 什么机器跑什么模型">
     <Heading>客户手上那台机器，能跑多大</Heading>
-    <div style={{ marginTop: 30 }}>
-      <div
-        style={{
-          display: 'flex',
-          gap: 28,
-          fontFamily: MONO,
-          fontSize: 20,
-          color: muted,
-          letterSpacing: '0.12em',
-          paddingBottom: 10,
-        }}
-      >
-        <span style={{ width: 230 }}>硬件</span>
-        <span style={{ width: 130 }}>可用显存</span>
-        <span style={{ flex: 1 }}>能跑的模型（4bit 量化）</span>
-        <span style={{ width: 260 }}>实测量级</span>
-        <span style={{ width: 150, textAlign: 'right' }}>引擎</span>
+    <div style={{ display: 'flex', gap: 96, marginTop: 40 }}>
+      <div style={{ flex: 1 }}>
+        <ColTitle>按机器分档</ColTitle>
+        <Steps>
+          <Step>
+            <Note k="MacBook（M 系列）" v="16–64 GB 统一内存，7B–14B 舒适、32B 勉强。mlx-lm，~230 tok/s。" />
+          </Step>
+          <Step>
+            <Note k="M5 Max / M3 Ultra 工作站" v="128–512 GB 统一内存，能装 MoE 大模型。容量惊人，带宽一般。" />
+          </Step>
+          <Step>
+            <Note k="单卡 GPU 服务器" v="24–80 GB，14B–70B（4bit）单模型多并发。vLLM，50 并发 920 tok/s。" />
+          </Step>
+          <Step>
+            <Note k="多卡 GPU 集群" v="160 GB+，70B 全精度或大 MoE，靠张量并行。并发上去才有意义。" />
+          </Step>
+        </Steps>
       </div>
-      <Tier
-        hw="手机 / NPU 端侧"
-        mem="—"
-        model="1.7B–3B，SmolLM2 / Qwen2.5-3B"
-        perf="prefill 970–1613 tok/s"
-        engine="NPU + GGUF"
-      />
-      <Tier
-        hw="Snapdragon X Elite"
-        mem="—"
-        model="3B 级，离线随身"
-        perf="NPU prefill 是 CPU 的 18×"
-        engine="NPU prefill"
-      />
-      <Tier
-        hw="Raspberry Pi / 嵌入式"
-        mem="4–8 GB"
-        model="1B–3B，极限量化可到 ~1.5 bit"
-        perf="能跑，别谈并发"
-        engine="llama.cpp"
-      />
-      <Tier
-        hw="MacBook（M 系列）"
-        mem="16–64 GB 统一内存"
-        model="7B–14B 舒适，32B 勉强"
-        perf="~230 tok/s，5–7 ms/token"
-        engine="mlx-lm"
-      />
-      <Tier
-        hw="M5 Max 工作站"
-        mem="128 GB 统一内存"
-        model="Qwen3.5-35B-A3B (NVFP4) 等 MoE"
-        perf="prefill 1810 · decode 112 tok/s"
-        engine="MLX"
-      />
-      <Tier
-        hw="单卡 GPU 服务器"
-        mem="24–80 GB"
-        model="14B–70B（4bit），单模型多并发"
-        perf="50 并发 920 tok/s"
-        engine="vLLM"
-      />
-      <Tier
-        hw="多卡 GPU 集群"
-        mem="160 GB+"
-        model="70B+ 全精度、大 MoE，张量并行"
-        perf="≥32 并发时 2–3× llama.cpp"
-        engine="vLLM / SGLang"
-      />
-    </div>
-    <div style={{ fontFamily: MONO, fontSize: 20, color: muted, marginTop: 20 }}>
-      性能数字见 docs/research/02 · 显存与参数量的对应为工程经验值，需按实际上下文长度复核
+      <div style={{ flex: 1 }}>
+        <ColTitle>怎么判断</ColTitle>
+        <Steps>
+          <Step>
+            <Note k="先显存，再带宽" v="装不下就是 0 tok/s，没有中间态；装得下之后才轮到快慢。" />
+          </Step>
+          <Step>
+            <Note k="别只算权重" v="70B 跑 32K 上下文，KV cache 还要再吃十几 GB。" />
+          </Step>
+          <Step>
+            <Note k="多卡不是相加" v="要张量并行才能合并显存，llama.cpp / Ollama 不做。" />
+          </Step>
+          <Step>
+            <Note k="容量 ≠ 吞吐" v="DGX Spark 装得下 120B，但 273 GB/s 是全表最低——开发机，不是推理服务器。" />
+          </Step>
+        </Steps>
+      </div>
     </div>
   </Shell>
 );
@@ -1479,8 +1404,7 @@ export default [
   S6a,
   S6b,
   S6c,
-  S6d,
-  S6e,
+  S6de,
   S6f,
   S6g,
   S6h,
