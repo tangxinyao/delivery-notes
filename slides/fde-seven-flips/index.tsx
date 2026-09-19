@@ -1298,23 +1298,23 @@ const S6c: Page = () => (
         <span style={{ flex: 1, textAlign: 'right' }}>占有率 / 装机</span>
       </div>
       <Rung first accent tier="T0 数据中心" gpu="B300" vram="288 GB" bw="8.0 TB/s" bwBar={248} fit="235B · 256K" price="~4.0 万" share="2026-01 起量产" />
-      <Rung gpu="B200" vram="192 GB" bw="8.0 TB/s" bwBar={248} fit="200B · 128K" price="3.0–5.0 万" share="云厂新增主力" />
       <Rung gpu="H200" vram="141 GB" bw="4.8 TB/s" bwBar={149} fit="120B · 64K" price="~3.1 万" share="租赁最普及" />
-      <Rung first accent tier="T1 专业单卡" gpu="RTX PRO 6000" vram="96 GB" bw="1792 GB/s" bwBar={56} fit="70B · 64K" price="1.33 万" share="单机首选" />
-      <Rung gpu="A100 80G" vram="80 GB" bw="2.0 TB/s" bwBar={62} fit="70B · 32K" price="二手 0.8–1.2 万" share="存量退役中" />
-      <Rung first accent tier="T2 消费旗舰" gpu="RTX 5090" vram="32 GB" bw="1792 GB/s" bwBar={56} fit="32B · 64K" price="街价 3,700+" share="Steam 0.41%" />
+      <Rung first accent tier="T1 国产加速卡" gpu="昇腾 910B" vram="64 GB" bw="1.6 TB/s" bwBar={50} fit="70B · 32K" price="约 1.7 万" share="信创主力" />
+      <Rung gpu="寒武纪 思元590" vram="80 GB" bw="1.2 TB/s" bwBar={37} fit="70B · 32K" price="约 1.5 万" share="国产第二供" />
+      <Rung first accent tier="T2 专业单卡" gpu="A100 80G" vram="80 GB" bw="2.0 TB/s" bwBar={62} fit="70B · 32K" price="二手 0.8–1.2 万" share="存量退役中" />
+      <Rung first accent tier="T3 消费旗舰" gpu="RTX 5090" vram="32 GB" bw="1792 GB/s" bwBar={56} fit="32B · 64K" price="街价 3,700+" share="Steam 0.41%" />
       <Rung gpu="RTX 4090" vram="24 GB" bw="1008 GB/s" bwBar={31} fit="32B · 16K" price="二手 1,200–1,500" share="Steam 0.90%" />
       <Rung gpu="Radeon RX 7900 XTX" vram="24 GB" bw="960 GB/s" bwBar={30} fit="32B · 16K" price="749–899" share="A 卡旗舰" />
-      <Rung first accent tier="T3 消费中端" gpu="RTX 5080" vram="16 GB" bw="672–960 GB/s" bwBar={23} fit="14B · 32K" price="~1,000 起" share="50 系合计 13.4%" />
+      <Rung first accent tier="T4 消费中端" gpu="RTX 5080" vram="16 GB" bw="672–960 GB/s" bwBar={23} fit="14B · 32K" price="~1,000 起" share="50 系合计 13.4%" />
       <Rung gpu="RTX 3060 12G" vram="12 GB" bw="360 GB/s" bwBar={11} fit="8B · 16K" price="二手 ~250" share="Steam 第一 3.99%" />
-      <Rung first accent tier="T4 统一内存" gpu="Mac M3 Ultra" vram="512 GB" bw="819 GB/s" bwBar={25} fit="235B · 128K" price="~0.95 万" share="不在统计内" />
+      <Rung first accent tier="T5 统一内存" gpu="Mac M3 Ultra" vram="512 GB" bw="819 GB/s" bwBar={25} fit="235B · 128K" price="~0.95 万" share="不在统计内" />
       <Rung gpu="Mac M4 / M5 Max" vram="128 GB" bw="546 GB/s" bwBar={17} fit="70B · 64K" price="0.40–0.50 万" share="不在统计内" />
       <Rung gpu="NVIDIA DGX Spark" vram="128 GB" bw="273 GB/s" bwBar={8} fit="120B · 32K" price="4,699" share="不在统计内" />
     </div>
     <div style={{ fontFamily: MONO, fontSize: 16, color: muted, marginTop: 10, lineHeight: 1.4 }}>
       柱长按带宽真实比例 · 上下文为按剩余显存反推的量级估算 · 价格为 2026-09 参考量级，消费卡街价波动极大
       <br />
-      占有率：消费卡为 Steam 硬件调查（游戏装机口径），数据中心无逐型号公开数据 · docs/research/02 §1.7
+      占有率：消费卡为 Steam 硬件调查（游戏装机口径），数据中心与国产卡无逐型号公开数据，国产卡参数/价格为渠道口径估算 · docs/research/02 §1.7
     </div>
   </Shell>
 );
@@ -1428,34 +1428,121 @@ const S6f: Page = () => (
   </Shell>
 );
 
-// 06g — 选型决策树
+// 06g — 引擎选型表
+const ERow = ({
+  engine,
+  mech,
+  use,
+  head,
+}: {
+  engine: string;
+  mech: string;
+  use: string;
+  head?: boolean;
+}) => (
+  <div
+    style={{
+      display: 'flex',
+      gap: 28,
+      alignItems: 'baseline',
+      padding: head ? '0 0 8px' : '13px 0',
+      borderTop: head ? 'none' : `1px solid ${rule}`,
+    }}
+  >
+    <div
+      style={{
+        width: 210,
+        flexShrink: 0,
+        fontFamily: MONO,
+        fontSize: head ? 17 : 23,
+        letterSpacing: head ? '0.14em' : '0.04em',
+        color: head ? muted : 'var(--osd-accent)',
+      }}
+    >
+      {engine}
+    </div>
+    <div
+      style={{
+        width: 600,
+        flexShrink: 0,
+        fontSize: head ? 17 : 23,
+        lineHeight: 1.4,
+        letterSpacing: head ? '0.14em' : 0,
+        fontFamily: head ? MONO : undefined,
+        color: head ? muted : 'var(--osd-text)',
+      }}
+    >
+      {mech}
+    </div>
+    <div
+      style={{
+        flex: 1,
+        fontSize: head ? 17 : 23,
+        lineHeight: 1.4,
+        letterSpacing: head ? '0.14em' : 0,
+        fontFamily: head ? MONO : undefined,
+        color: head ? muted : dim,
+      }}
+    >
+      {use}
+    </div>
+  </div>
+);
+
 const S6g: Page = () => (
   <Shell eyebrow="06 · 快慢也是对错">
-    <Heading>选型只取决于一个问题：几个并发用户</Heading>
-    <div style={{ marginTop: 34 }}>
+    <Heading>先看并发数，再看引擎的机制差别</Heading>
+    <div style={{ marginTop: 26 }}>
+      <ERow head engine="引擎" mech="核心机制 · 它靠什么快" use="选它的场景 / 它的短板" />
       <Steps>
         <Step>
-          <Row k="1 个人" v="Ollama（技术用户）/ LM Studio（不碰命令行的人）。五分钟跑起来。" />
+          <ERow
+            engine="vLLM"
+            mech="PagedAttention 把 KV cache 分页管理，连续批处理动态拼 batch，支持张量 / 流水线并行。"
+            use="5–100+ 并发的生产默认项。短板：显存占用激进，冷启动慢，单请求 TTFT 不占优。"
+          />
         </Step>
         <Step>
-          <Row k="嵌入 / 边缘" v="llama.cpp。纯 C/C++ 零依赖，CPU 优先，单流效率最高。" />
+          <ERow
+            engine="SGLang"
+            mech="RadixAttention 用前缀树复用共享上下文的 KV，前缀命中即免算。"
+            use="RAG / 多轮 / agent 这类前缀重复高的负载，比 vLLM 高约 29%。短板：生态与模型覆盖不及 vLLM。"
+          />
         </Step>
         <Step>
-          <Row k="Apple 平台" v="mlx-lm，或 Ollama 0.19+ 自动走的 MLX 路径。" />
+          <ERow
+            engine="llama.cpp"
+            mech="纯 C/C++ 零依赖，GGUF 权重内存映射，CPU / 混合卸载优先，单流路径极短。"
+            use="嵌入式、边缘、CPU-only。冷启单请求 TTFT 8–12 ms，快过 vLLM 的 16–25 ms。短板：不做张量并行，多卡白买。"
+          />
         </Step>
         <Step>
-          <Row k="5–100+ 并发" v="vLLM。PagedAttention + 连续批处理，2026 年的生产默认项。" />
+          <ERow
+            engine="Ollama"
+            mech="llama.cpp 的封装层，加了模型库、自动拉取和常驻服务，0.19+ 在 Apple 上自动走 MLX。"
+            use="一个人用、要五分钟跑起来的技术用户。短板：50 并发下 155 tok/s、P99 673 ms，压力下直接趴平。"
+          />
         </Step>
         <Step>
-          <Row k="前缀重的负载" v="SGLang。RAG / 多轮 / agent 共享上下文时，比 vLLM 高约 29%。" src="RadixAttention" />
+          <ERow
+            engine="LM Studio"
+            mech="同样基于 llama.cpp，但给的是 GUI：点选模型、调参数、开本地 OpenAI 兼容端口。"
+            use="不碰命令行的人做原型和演示。短板：闭源、不适合进生产。"
+          />
         </Step>
         <Step>
-          <Row k="绝对不要" v="多卡上用 llama.cpp / Ollama——它们不做张量并行，白买的卡。" />
+          <ERow
+            engine="mlx-lm"
+            mech="Apple MLX 框架，直接吃统一内存，无需显存搬运，M 系列上单流吞吐最优。"
+            use="Mac 本地跑 70B 级模型。短板：只有 Apple 平台，并发调度能力弱。"
+          />
         </Step>
       </Steps>
     </div>
-    <div style={{ fontSize: 28, color: muted, marginTop: 34 }}>
-      背景：HuggingFace TGI 已于 2026-03 进入维护模式，官方改荐 vLLM / SGLang / llama.cpp / MLX。
+    <div style={{ fontFamily: MONO, fontSize: 17, color: muted, marginTop: 14, lineHeight: 1.45 }}>
+      一句话：单流看延迟选 llama.cpp 系，并发看吞吐选 vLLM 系，前缀重就上 SGLang。
+      <br />
+      HuggingFace TGI 已于 2026-03 进入维护模式，官方改荐 vLLM / SGLang / llama.cpp / MLX · 并发数据 Red Hat 2026
     </div>
   </Shell>
 );
