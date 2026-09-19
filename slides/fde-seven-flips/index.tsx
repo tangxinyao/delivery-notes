@@ -1046,6 +1046,176 @@ const S5: Page = () => (
   <Section n="05" before="以前接口是产品" after="现在上下文是产品" />
 );
 
+// 05-o1..o3 — 什么是 ontology
+const OCol = ({
+  a,
+  b,
+  c,
+  head,
+}: {
+  a: string;
+  b: string;
+  c: string;
+  head?: boolean;
+}) => (
+  <div
+    style={{
+      display: 'flex',
+      gap: 32,
+      alignItems: 'baseline',
+      padding: head ? '0 0 10px' : '18px 0',
+      borderTop: head ? 'none' : `1px solid ${rule}`,
+    }}
+  >
+    <div
+      style={{
+        width: 260,
+        flexShrink: 0,
+        fontFamily: MONO,
+        fontSize: head ? 18 : 26,
+        letterSpacing: head ? '0.14em' : '0.04em',
+        color: head ? muted : 'var(--osd-accent)',
+      }}
+    >
+      {a}
+    </div>
+    <div
+      style={{
+        width: 620,
+        flexShrink: 0,
+        fontFamily: head ? MONO : undefined,
+        fontSize: head ? 18 : 26,
+        letterSpacing: head ? '0.14em' : 0,
+        lineHeight: 1.42,
+        color: head ? muted : 'var(--osd-text)',
+      }}
+    >
+      {b}
+    </div>
+    <div
+      style={{
+        flex: 1,
+        fontFamily: head ? MONO : undefined,
+        fontSize: head ? 18 : 26,
+        letterSpacing: head ? '0.14em' : 0,
+        lineHeight: 1.42,
+        color: head ? muted : dim,
+      }}
+    >
+      {c}
+    </div>
+  </div>
+);
+
+const S5o1: Page = () => (
+  <Shell eyebrow="05 · 上下文就是产品">
+    <Heading>本体 = 把客户的业务世界写成机器能读的定义</Heading>
+    <div style={{ fontSize: 30, color: dim, lineHeight: 1.5, marginTop: 24 }}>
+      Ontology 不是文档、不是数据字典、不是一张图。它是四件东西的集合：这个行业里有哪些对象、每个对象有什么属性、对象之间怎么连、能对它们做什么操作。
+    </div>
+    <div style={{ marginTop: 26 }}>
+      <OCol head a="四要素" b="定义" c="设备维修场景的例子" />
+      <Steps>
+        <Step>
+          <OCol
+            a="实体 Entity"
+            b="业务里真实存在、可被指认的对象类型，有稳定 ID。"
+            c="设备、工单、备件、技师、产线、客户。"
+          />
+        </Step>
+        <Step>
+          <OCol
+            a="属性 Property"
+            b="实体身上的字段，带类型、取值范围和单位。"
+            c="设备.型号、设备.投产日期、工单.故障码（枚举 47 项）。"
+          />
+        </Step>
+        <Step>
+          <OCol
+            a="关系 Link"
+            b="实体之间被命名的关联，有方向和基数约束。"
+            c="工单 → 指向一台设备；备件 ← 适配多个型号；技师 ← 持有资质。"
+          />
+        </Step>
+        <Step>
+          <OCol
+            a="动作 Action"
+            b="允许对实体做的受控写操作，带前置条件和权限。"
+            c="派工、领料、关闭工单——关闭前必须有维修记录。"
+          />
+        </Step>
+      </Steps>
+    </div>
+  </Shell>
+);
+
+const S5o2: Page = () => (
+  <Shell eyebrow="05 · 上下文就是产品">
+    <Heading>它和你手上已有的三样东西差在哪</Heading>
+    <div style={{ marginTop: 26 }}>
+      <OCol head a="你已经有的" b="它能回答什么" c="它缺的那一半，正是本体补的" />
+      <Steps>
+        <Step>
+          <OCol
+            a="数据库 schema"
+            b="数据怎么存：表、列、外键、索引。"
+            c="缺语义。t_wo_02.status=3 是什么意思、谁能改、改了触发什么，schema 里没有。"
+          />
+        </Step>
+        <Step>
+          <OCol
+            a="知识图谱"
+            b="事实之间的关联，适合查询和推理。"
+            c="缺执行。图谱只读，不定义动作，也不承接权限和写入校验。"
+          />
+        </Step>
+        <Step>
+          <OCol
+            a="Prompt 里的说明"
+            b="临时告诉模型业务规则该怎么理解。"
+            c="缺唯一性。同一条规则散在十个 prompt 里，改一处要重测全部，还改不全。"
+          />
+        </Step>
+        <Step>
+          <OCol
+            a="本体"
+            b="把三者合一：语义 + 关系 + 可执行动作。"
+            c="一处定义，查询、权限、写入校验、给模型的工具描述全从它生成。"
+          />
+        </Step>
+      </Steps>
+    </div>
+  </Shell>
+);
+
+const S5o3: Page = () => (
+  <Shell eyebrow="05 · 上下文就是产品">
+    <Heading>为什么非要它：LLM 不缺知识，缺的是边界</Heading>
+    <div style={{ marginTop: 30 }}>
+      <Steps>
+        <Step>
+          <Row k="抽取" v="有本体，抽出来的是「设备」这一类；没有本体，同一句话这次抽成设备、下次抽成资产、再下次抽成机器。" />
+        </Step>
+        <Step>
+          <Row k="调用" v="实体和动作直接生成 tool 定义。模型不是在自由发挥，是在一份有限的动作清单里挑。" />
+        </Step>
+        <Step>
+          <Row k="约束" v="「工单关闭前必须有维修记录」写在动作的前置条件里，模型绕不过去；写在 prompt 里，模型心情好才遵守。" />
+        </Step>
+        <Step>
+          <Row k="权限" v="谁能看哪台设备是实体上的属性，模型继承调用者的权限，不需要为 AI 单开一套。" />
+        </Step>
+        <Step>
+          <Row k="评测" v="评测用例对着实体和动作写，换模型时重跑一遍就知道能不能上。" />
+        </Step>
+        <Step>
+          <Row k="交付含义" v="所以 Day 0–1 做的不是需求调研，是把这套定义敲出来。它就是那个「上下文产品」。" />
+        </Step>
+      </Steps>
+    </div>
+  </Shell>
+);
+
 const S5a: Page = () => (
   <Shell eyebrow="05 · 上下文就是产品">
     <Heading>本体不是文档</Heading>
@@ -1298,8 +1468,8 @@ const S6c: Page = () => (
       </div>
       <Rung first accent tier="T0 数据中心" gpu="B300" vram="288 GB" bw="8.0 TB/s" bwBar={248} fit="235B · 256K" price="~4.0 万" share="2026-01 起量产" />
       <Rung gpu="H200" vram="141 GB" bw="4.8 TB/s" bwBar={149} fit="120B · 64K" price="~3.1 万" share="租赁最普及" />
-      <Rung first accent tier="T1 国产加速卡" gpu="昇腾 910B" vram="64 GB" bw="1.6 TB/s" bwBar={50} fit="70B · 32K" price="约 1.7 万" share="信创主力" />
-      <Rung gpu="寒武纪 思元590" vram="80 GB" bw="1.2 TB/s" bwBar={37} fit="70B · 32K" price="约 1.5 万" share="国产第二供" />
+      <Rung first accent tier="T1 国产加速卡" gpu="昇腾 910B" vram="64 GB" bw="1.6 TB/s" bwBar={50} fit="70B · 32K" price="1.7 万 ≈ ¥12 万" share="信创主力" />
+      <Rung gpu="寒武纪 思元590" vram="96 GB" bw="未公开" bwBar={0} fit="70B · 32K" price="对标 A100 量级" share="国产第二供" />
       <Rung first accent tier="T2 专业单卡" gpu="A100 80G" vram="80 GB" bw="2.0 TB/s" bwBar={62} fit="70B · 32K" price="二手 0.8–1.2 万" share="存量退役中" />
       <Rung first accent tier="T3 消费旗舰" gpu="RTX 5090" vram="32 GB" bw="1792 GB/s" bwBar={56} fit="32B · 64K" price="街价 3,700+" share="Steam 0.41%" />
       <Rung gpu="RTX 4090" vram="24 GB" bw="1008 GB/s" bwBar={31} fit="32B · 16K" price="二手 1,200–1,500" share="Steam 0.90%" />
@@ -1313,7 +1483,7 @@ const S6c: Page = () => (
     <div style={{ fontFamily: MONO, fontSize: 16, color: muted, marginTop: 10, lineHeight: 1.4 }}>
       柱长按带宽真实比例 · 上下文为按剩余显存反推的量级估算 · 价格为 2026-09 参考量级，消费卡街价波动极大
       <br />
-      占有率：消费卡为 Steam 硬件调查（游戏装机口径），数据中心与国产卡无逐型号公开数据，国产卡参数/价格为渠道口径估算 · docs/research/02 §1.7
+      占有率：消费卡为 Steam 硬件调查（游戏装机口径），数据中心与国产卡无逐型号公开数据，国产卡为渠道口径：910B 单卡约 ¥12 万，思元590 显存带宽官方未公开 · docs/research/02 §1.7
     </div>
   </Shell>
 );
@@ -1835,6 +2005,9 @@ export const notes: (string | undefined)[] = [
   '第三个反例。Uber 这条最适合技术受众：模型只负责出补丁，对错让编译器和测试判。这就是「交界处放校验」的工业级版本。',
   '不要评判哪个架构好，只讲代价。',
   '上下文工程这个词不用解释，直接讲本体。',
+  '这页把 ontology 落地：先说它不是文档，然后四要素逐条过。动作那一条最关键——本体不只是描述世界，还定义了能对世界做什么。例子用听众所在行业替换。',
+  '这页是给技术受众解心结的：他们会想「这不就是数据库 schema / 知识图谱吗」。逐行回答，落点在最后一行——一处定义，其余全生成。',
+  '这页回答「为什么非要本体」。六条里挑三条讲：抽取一致性、动作清单、前置条件。最后一行把它接回上一页的 Day 0–1。',
   '重点是最后一条：规则写进 prompt，改一条要重测全部。',
   '这三天是 Palantir 的真实节奏，不是理想化流程。',
   '这一条业务方最容易忽略：慢就是错。先花两页把“为什么要本地”讲清楚，再谈快慢。',
@@ -1878,6 +2051,9 @@ export default [
   S4a6,
   S4b,
   S5,
+  S5o1,
+  S5o2,
+  S5o3,
   S5a,
   S5b,
   S6,
