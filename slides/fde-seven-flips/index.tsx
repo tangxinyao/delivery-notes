@@ -887,70 +887,70 @@ const Rung = ({
   <div
     style={{
       display: 'flex',
-      gap: 22,
+      gap: 20,
       alignItems: 'center',
-      padding: '13px 0',
+      padding: '8px 0',
       borderTop: first ? `2px solid ${accent ? 'var(--osd-accent)' : rule}` : `1px solid #17181c`,
     }}
   >
     <div
       style={{
-        width: 168,
+        width: 150,
         flexShrink: 0,
         fontFamily: MONO,
-        fontSize: 19,
+        fontSize: 17,
         letterSpacing: '0.1em',
         color: accent ? 'var(--osd-accent)' : muted,
       }}
     >
       {first ? tier : ''}
     </div>
-    <div style={{ width: 290, flexShrink: 0, fontSize: 26, fontWeight: accent ? 700 : 500 }}>{gpu}</div>
+    <div style={{ width: 280, flexShrink: 0, fontSize: 22, fontWeight: accent ? 700 : 500 }}>{gpu}</div>
     <div
       style={{
-        width: 110,
+        width: 100,
         flexShrink: 0,
         fontFamily: MONO,
-        fontSize: 23,
+        fontSize: 20,
         color: accent ? 'var(--osd-accent)' : dim,
         textAlign: 'right',
       }}
     >
       {vram}
     </div>
-    <div style={{ width: 430, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 14 }}>
+    <div style={{ width: 420, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 12 }}>
       <div
         style={{
           width: bwBar,
-          height: 16,
+          height: 13,
           background: accent ? 'var(--osd-accent)' : '#3a3d44',
         }}
       />
-      <span style={{ fontFamily: MONO, fontSize: 20, color: muted }}>{bw}</span>
+      <span style={{ fontFamily: MONO, fontSize: 18, color: muted }}>{bw}</span>
     </div>
-    <div style={{ flex: 1, fontSize: 24, color: dim, lineHeight: 1.3 }}>{fit}</div>
+    <div style={{ flex: 1, fontSize: 21, color: dim, lineHeight: 1.25 }}>{fit}</div>
   </div>
 );
 
 const S6c: Page = () => (
   <Shell eyebrow="翻转 06 · 显卡天梯图" note="容量 × 带宽">
     <Heading>显存决定能不能跑，带宽决定跑多快</Heading>
-    <div style={{ marginTop: 26 }}>
+    <div style={{ marginTop: 20 }}>
       <div
         style={{
           display: 'flex',
-          gap: 22,
+          gap: 20,
           fontFamily: MONO,
-          fontSize: 19,
+          fontSize: 17,
           color: muted,
           letterSpacing: '0.12em',
-          paddingBottom: 8,
+          paddingBottom: 6,
         }}
       >
-        <span style={{ width: 168 }}>档位</span>
-        <span style={{ width: 290 }}>型号</span>
-        <span style={{ width: 110, textAlign: 'right' }}>显存</span>
-        <span style={{ width: 430 }}>显存带宽</span>
+        <span style={{ width: 150 }}>档位</span>
+        <span style={{ width: 280 }}>型号</span>
+        <span style={{ width: 100, textAlign: 'right' }}>显存</span>
+        <span style={{ width: 420 }}>显存带宽</span>
         <span style={{ flex: 1 }}>Q4 单卡能装下</span>
       </div>
       <Rung first tier="T0 数据中心" gpu="B200" vram="192 GB" bw="8.0 TB/s" bwBar={330} fit="200B+ 稠密 / 超大 MoE" />
@@ -967,7 +967,7 @@ const S6c: Page = () => (
       <Rung first tier="T4 统一内存" gpu="Mac M3 Ultra" vram="512 GB" bw="819 GB/s" bwBar={34} fit="容量无敌，带宽一般：超大 MoE" />
       <Rung tier="" gpu="Mac M4 / M5 Max" vram="128 GB" bw="546 GB/s" bwBar={23} fit="70B Q4" />
     </div>
-    <div style={{ fontFamily: MONO, fontSize: 19, color: muted, marginTop: 16 }}>
+    <div style={{ fontFamily: MONO, fontSize: 17, color: muted, marginTop: 12 }}>
       柱长按带宽真实比例 · decode ≈ 带宽 ÷ 每 token 权重字节数（仅小 batch 成立）· 未计 KV cache · docs/research/02 §1.7
     </div>
   </Shell>
