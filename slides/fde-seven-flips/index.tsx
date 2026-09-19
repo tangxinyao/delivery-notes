@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import type { DesignSystem, Page, SlideMeta, SlideTransition } from '@open-slide/core';
-import { Step, Steps, useIsActivePage } from '@open-slide/core';
+import { ImagePlaceholder, Step, Steps, useIsActivePage } from '@open-slide/core';
 
 export const design: DesignSystem = {
   palette: { bg: '#0d0e10', text: '#edece7', accent: '#e08b3e' },
@@ -726,9 +726,215 @@ const S4a: Page = () => (
   </Shell>
 );
 
+const S4a2: Page = () => (
+  <Shell eyebrow="04 · 消除不确定性">
+    <Heading>先问要不要，再问怎么排</Heading>
+    <div style={{ marginTop: 44 }}>
+      <Steps>
+        <Step>
+          <Row k="不上" v="抖音那种 feed 流，目标可度量、规则加排序模型已经够好，LLM 只是加延迟和方差。" />
+        </Step>
+        <Step>
+          <Row k="固定流程" v="知识库、审单、抽取：流程本来就定死，只在说不清的那几个节点调模型，LangGraph 这类图编排就够。" />
+        </Step>
+        <Step>
+          <Row k="动态编排" v="步数不确定、工具组合随输入变，才需要模型自己决定下一步——也才轮到 agent 循环。" />
+        </Step>
+        <Step>
+          <Row
+            k="实证"
+            v="AppFolio 的 Realm-X 从自由 agent 换成 LangGraph 显式编排后，回答准确率翻倍。"
+            src="LangChain 客户案例"
+          />
+        </Step>
+        <Step>
+          <Row k="顺序" v="先找出流程里哪几步说不清，剩下的全归代码。自主度是代价，不是卖点。" />
+        </Step>
+      </Steps>
+    </div>
+  </Shell>
+);
+
+// ── 04 配图组件 ──
+
+const Shot = ({
+  name,
+  kind,
+  note,
+  hint,
+}: {
+  name: string;
+  kind: string;
+  note: string;
+  hint: string;
+}) => (
+  <div style={{ flex: 1, minWidth: 0 }}>
+    <div
+      style={{
+        width: '100%',
+        height: 214,
+        border: `1px solid ${rule}`,
+        background: '#141519',
+        overflow: 'hidden',
+        display: 'flex',
+      }}
+    >
+      <ImagePlaceholder hint={hint} style={{ flex: 1, width: '100%', height: '100%' }} />
+    </div>
+    <div
+      style={{
+        fontFamily: MONO,
+        fontSize: 20,
+        letterSpacing: '0.16em',
+        color: 'var(--osd-accent)',
+        marginTop: 22,
+      }}
+    >
+      {kind}
+    </div>
+    <div style={{ fontSize: 34, fontWeight: 700, marginTop: 10 }}>{name}</div>
+    <div style={{ fontSize: 25, lineHeight: 1.5, color: muted, marginTop: 10 }}>{note}</div>
+  </div>
+);
+
+const Case = ({
+  eyebrow,
+  heading,
+  hint,
+  caption,
+  children,
+}: {
+  eyebrow: string;
+  heading: string;
+  hint: string;
+  caption: string;
+  children: ReactNode;
+}) => (
+  <Shell eyebrow={eyebrow}>
+    <Heading>{heading}</Heading>
+    <div style={{ display: 'flex', gap: 72, marginTop: 44, alignItems: 'flex-start' }}>
+      <div style={{ width: 880, flexShrink: 0 }}>
+        <div
+          style={{
+            width: 880,
+            height: 495,
+            border: `1px solid ${rule}`,
+            background: '#141519',
+            display: 'flex',
+            overflow: 'hidden',
+          }}
+        >
+          <ImagePlaceholder hint={hint} style={{ flex: 1, width: '100%', height: '100%' }} />
+        </div>
+        <div style={{ fontFamily: MONO, fontSize: 20, color: muted, marginTop: 16 }}>{caption}</div>
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>{children}</div>
+    </div>
+  </Shell>
+);
+
+const Beat = ({ k, v }: { k: string; v: string }) => (
+  <div style={{ borderTop: `1px solid ${rule}`, padding: '20px 0' }}>
+    <div style={{ fontFamily: MONO, fontSize: 21, letterSpacing: '0.12em', color: 'var(--osd-accent)' }}>
+      {k}
+    </div>
+    <div style={{ fontSize: 29, lineHeight: 1.45, color: dim, marginTop: 8 }}>{v}</div>
+  </div>
+);
+
+// 04a3 — 大家熟的 ReAct 范式软件
+const S4a3: Page = () => (
+  <Shell eyebrow="04 · 消除不确定性">
+    <Heading>先看清 ReAct 长什么样</Heading>
+    <div style={{ display: 'flex', gap: 48, marginTop: 44 }}>
+      <Shot
+        kind="CODING"
+        name="OpenAI Codex"
+        note="给一句需求，它自己读仓库、改文件、跑测试，不过就再来一轮。"
+        hint="Codex 云端任务界面：任务列表与 diff 视图"
+      />
+      <Shot
+        kind="CODING"
+        name="Claude Code"
+        note="终端里一个裸循环：想一步、调一个工具、看结果、再想。"
+        hint="Claude Code 终端截图：工具调用与文件编辑过程"
+      />
+      <Shot
+        kind="IDE"
+        name="Cursor Agent"
+        note="编辑器里跨文件自主改，步数不定，人只在最后审 diff。"
+        hint="Cursor Agent 面板截图：多文件改动与接受/拒绝"
+      />
+      <Shot
+        kind="ENTERPRISE"
+        name="WorkBuddy"
+        note="企业内通用助手，任务来了自己决定查哪张表、调哪个系统。"
+        hint="WorkBuddy 对话界面截图：一次带工具调用的问答"
+      />
+    </div>
+    <div style={{ fontSize: 29, color: muted, marginTop: 40 }}>
+      共同点：任务开放、步数不确定、错了能重来。满足这三条，才配得上一个自由循环。
+    </div>
+  </Shell>
+);
+
+// 04a4 — 非 ReAct 案例一
+const S4a4: Page = () => (
+  <Case
+    eyebrow="04 · 非 ReAct 范式 ①"
+    heading="AppFolio Realm-X：图编排，不是自由循环"
+    hint="AppFolio Realm-X copilot 界面截图"
+    caption="AppFolio Realm-X · 物业管理 copilot"
+  >
+    <Beat k="形态" v="意图分类 → 取数 → 生成 → 校验 → 落动作，一张写死的图。" />
+    <Beat k="模型位置" v="只在分类、抽取、改写三个节点，路由由代码判。" />
+    <Beat k="收益" v="从自由 agent 换成 LangGraph 显式编排后，回答准确率翻倍。" />
+    <Beat k="业务" v="物业经理每周省下 10 小时以上。" />
+    <div style={{ fontFamily: MONO, fontSize: 19, color: muted, marginTop: 24 }}>
+      来源：LangChain 官方客户案例
+    </div>
+  </Case>
+);
+
+// 04a5 — 非 ReAct 案例二
+const S4a5: Page = () => (
+  <Case
+    eyebrow="04 · 非 ReAct 范式 ②"
+    heading="客服：分诊图跑主干，模型只管理解"
+    hint="Klarna AI 助手或 Vodafone Super TOBi 对话界面截图"
+    caption="Klarna AI Assistant / Vodafone-Fastweb Super TOBi"
+  >
+    <Beat k="形态" v="分诊 → 查账户 → 命中固定动作 → 生成话术 → 兜底转人工。" />
+    <Beat k="模型位置" v="进口的意图理解和出口的措辞，中间全是确定性调用。" />
+    <Beat k="Klarna" v="覆盖 8500 万活跃用户，客户问题解决时长降低 80%。" />
+    <Beat k="Super TOBi" v="服务近 950 万客户，正确率 90%，自助解决率 82%。" />
+    <div style={{ fontFamily: MONO, fontSize: 19, color: muted, marginTop: 24 }}>
+      来源：LangChain 客户案例与 CX 实践分享
+    </div>
+  </Case>
+);
+
+// 04a6 — 非 ReAct 案例三
+const S4a6: Page = () => (
+  <Case
+    eyebrow="04 · 非 ReAct 范式 ③"
+    heading="Uber：流水线式改造，编译器当裁判"
+    hint="Uber 单测生成/代码迁移工具界面或流水线截图"
+    caption="Uber · 大规模代码迁移与单测生成"
+  >
+    <Beat k="形态" v="扫描目标 → 定位改动点 → 模型出补丁 → 编译与测试门禁 → 失败回修。" />
+    <Beat k="模型位置" v="只在「出补丁」这一步，对错不由模型自评。" />
+    <Beat k="关键" v="正确性交给编译器和测试，不确定性被挡在门禁之外。" />
+    <Beat k="规模" v="同一张图重复跑几万个文件，成本可预测。" />
+    <div style={{ fontFamily: MONO, fontSize: 19, color: muted, marginTop: 24 }}>
+      来源：LangChain 官方客户案例
+    </div>
+  </Case>
+);
+
 const S4b: Page = () => (
   <Shell eyebrow="04 · 消除不确定性">
-    <Heading>选架构，是选你能忍的代价</Heading>
+    <Heading>真到了动态编排，才比架构</Heading>
     <div style={{ marginTop: 44 }}>
       <Steps>
         <Step>
@@ -1308,6 +1514,7 @@ const Sources: Page = () => (
       <Row k="一手" v="Palantir S-1 与官方博客、PostHog 公开工程手册、AWS APN Blog" />
       <Row k="复盘" v="OpenAI FDE 分享（ZenML LLMOps Database）" />
       <Row k="调研" v="ICONIQ Growth《The FDE Advantage》、Red Hat 2026 serving benchmark" />
+      <Row k="案例" v="LangChain 官方客户案例：AppFolio Realm-X、Klarna、LinkedIn、Uber" />
     </div>
     <div style={{ fontSize: 28, color: muted, marginTop: 44, lineHeight: 1.6 }}>
       完整材料与逐条引用见 docs/research/，共七篇。
@@ -1450,6 +1657,11 @@ export const notes: (string | undefined)[] = [
   '如果听众里有做交付的，这一页可以互动：你们遇到过哪几条。',
   '技术受众从这里开始进入状态。',
   '这张表可以当交付规范直接用。',
+  '这页是对上一页的补充，也是最容易被跳过的一步：先判断要不要 LLM。抖音那种 feed 流上 LLM 是纯亏；知识库这种流程固定的，只在关键节点放模型。别一上来就按 ReAct 的视角想架构。AppFolio 那条是现成的反例：从自由 agent 退回显式编排，准确率反而翻倍。',
+  '这页是让听众对号入座：Codex、Claude Code、Cursor、WorkBuddy，大家天天用的都是 ReAct。所以一提 Agent 架构就往这边想。三个共同点是关键——任务开放、步数不定、错了能重来。',
+  '第一个反例。AppFolio 不是不会做 agent，是做过了退回来的：换成显式图编排后准确率翻倍。强调模型只出现在三个节点。',
+  '第二个反例。客服是最典型的固定流程：主干全是确定性调用，模型只管进口的理解和出口的措辞。数字挑一个念就行。',
+  '第三个反例。Uber 这条最适合技术受众：模型只负责出补丁，对错让编译器和测试判。这就是「交界处放校验」的工业级版本。',
   '不要评判哪个架构好，只讲代价。',
   '上下文工程这个词不用解释，直接讲本体。',
   '重点是最后一条：规则写进 prompt，改一条要重测全部。',
@@ -1486,6 +1698,11 @@ export default [
   S3b,
   S4,
   S4a,
+  S4a2,
+  S4a3,
+  S4a4,
+  S4a5,
+  S4a6,
   S4b,
   S5,
   S5a,
