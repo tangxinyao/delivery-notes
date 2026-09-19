@@ -78,23 +78,26 @@ decode 吞吐 (tok/s) ≈ 显存带宽 (GB/s) ÷ 每 token 读取的权重字节
 
 → 所以**同代卡之间，decode 速度几乎正比于显存带宽**；显存容量决定"能不能跑"，带宽决定"跑多快"。[19][20]
 
-| 档位 | 型号 | 显存 | 带宽 | Q4 单卡能装下 | 典型定位 |
-| --- | --- | --- | --- | --- | --- |
-| **T0 数据中心旗舰** | **B200** | 192 GB HBM3e | **~8.0 TB/s** | 200B+ 稠密 / 超大 MoE | 长上下文吞吐为 RTX PRO 6000 的 **~4.9×** [21] |
-| | **H200** | 141 GB HBM3e | ~4.8 TB/s | 120B 级 | 生产集群主力 |
-| | **H100** | 80 GB HBM3 | ~3.35 TB/s | 70B 舒适 | 上一代生产基线 |
-| **T1 专业单卡** | **RTX PRO 6000 Blackwell** | **96 GB** GDDR7 ECC | 1792 GB/s | **70B FP16 / 109B 级 MoE Q4** | 单机最优性价比；30B 上 **~8425 tok/s**，约 5090 的 **1.8×** [21][22] |
-| | **A100 80G** | 80 GB HBM2e | ~2.0 TB/s | 70B | 存量集群 |
-| | **L40S / RTX 6000 Ada** | 48 GB | 864 / 960 GB/s | 32B 舒适，70B 勉强 | 企业机架推理卡 |
-| **T2 消费旗舰** | **RTX 5090** | 32 GB GDDR7 | **1792 GB/s** | **70B Q4 单卡可跑** | 带宽比 4090 高 **77%**；小 batch 下每卡吞吐与 PRO 6000 接近 [20][21] |
-| | **RTX 4090** | 24 GB | 1008 GB/s | 32B 舒适 | 上一代发烧基线 |
-| | **Radeon RX 7900 XTX** | 24 GB | 960 GB/s | 32B 舒适，70B Q4 需压紧 KV cache | **A 卡旗舰**：Llama 3.1 8B 约 **96 tok/s**，约为 4090 的 **75%**，但价格低不少 [24] |
-| **T3 消费中端** | **RTX 5080** | 16 GB | 960 GB/s | 14B 舒适 | 单人开发机 |
-| | **RTX 4070 Ti S** | 16 GB | 672 GB/s | 14B | — |
-| | **RTX 3060 12G** | 12 GB | 360 GB/s | 7–8B | 入门门槛 |
-| **T4 统一内存** | **M3 Ultra** | 512 GB 统一 | 819 GB/s | **超大 MoE**（容量无敌、带宽一般） | 容量换带宽的另一条路线 |
-| | **M4 / M5 Max** | 128 GB 统一 | 546 GB/s 起 | 70B Q4 | 见 §1.5 |
-| | **NVIDIA DGX Spark**（GB10） | 128 GB 统一 LPDDR5X | **273 GB/s**（全表最低） | 120B 级 | 桌面级「个人 AI 超算」：1 PFLOP 稀疏 FP4，但带宽是短板 —— GPT-OSS 120B 实测 decode **~33 tok/s**、20B 约 **50 tok/s**（prefill 2053 tok/s）[23] |
+| 档位 | 型号 | 显存 | 带宽 | Q4 装得下 · 上下文 | 参考价（2026-09） | 占有率 / 装机 | 典型定位 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| **T0 数据中心旗舰** | **B200** | 192 GB HBM3e | **~8.0 TB/s** | 200B · 128K | **$3.0–5.0 万** | 云厂新增主力 | 长上下文吞吐为 RTX PRO 6000 的 **~4.9×** [21] |
+| | **H200** | 141 GB HBM3e | ~4.8 TB/s | 120B · 64K | ~$3.1 万 | 租赁最普及 | 生产集群主力 |
+| | **H100** | 80 GB HBM3 | ~3.35 TB/s | 70B · 32K | $2.5–4.0 万 | 存量最大 | 上一代生产基线 |
+| **T1 专业单卡** | **RTX PRO 6000 Blackwell** | **96 GB** GDDR7 ECC | 1792 GB/s | 70B · 64K | **$1.33 万**（MSRP，一年涨 55%）| 单机首选 | 单机最优性价比；30B 上 **~8425 tok/s**，约 5090 的 **1.8×** [21][22] |
+| | **A100 80G** | 80 GB HBM2e | ~2.0 TB/s | 70B · 32K | 二手 $0.8–1.2 万 | 存量退役中 | 上上代集群 |
+| | **L40S / RTX 6000 Ada** | 48 GB | 864 / 960 GB/s | 32B · 32K | 无稳定公开报价 | 机架常见 | 企业机架推理卡 |
+| **T2 消费旗舰** | **RTX 5090** | 32 GB GDDR7 | **1792 GB/s** | 32B · 64K | MSRP $1,999 / **街价 $3,700+** | Steam **0.41%** | 带宽比 4090 高 **77%**；小 batch 下每卡吞吐与 PRO 6000 接近 [20][21] |
+| | **RTX 4090** | 24 GB | 1008 GB/s | 32B · 16K | 二手 $1,200–1,500（已停产）| Steam **0.90%** | 上一代发烧基线 |
+| | **Radeon RX 7900 XTX** | 24 GB | 960 GB/s | 32B · 16K | **$749–899** | A 卡旗舰 | Llama 3.1 8B 约 **96 tok/s**，约为 4090 的 **75%**；单位显存最便宜 [24] |
+| **T3 消费中端** | **RTX 5080 / 4070 Ti S** | 16 GB | 672–960 GB/s | 14B · 32K | ~$1,000 起 | 50 系合计 **13.4%** | 单人开发机 |
+| | **RTX 3060 12G** | 12 GB | 360 GB/s | 8B · 16K | 二手约 $250 | **Steam 第一，3.99%** | 入门门槛 |
+| **T4 统一内存** | **Mac M3 Ultra** | 512 GB 统一 | 819 GB/s | 235B · 128K | ≈$0.95 万 | 不在统计内 | 容量换带宽的另一条路线 |
+| | **Mac M4 / M5 Max** | 128 GB 统一 | 546 GB/s 起 | 70B · 64K | $0.40–0.50 万 | 不在统计内 | 见 §1.5 |
+| | **NVIDIA DGX Spark**（GB10） | 128 GB 统一 LPDDR5X | **273 GB/s**（全表最低） | 120B · 32K | **$4,699**（原 $3,999）| 不在统计内 | 桌面级「个人 AI 超算」：1 PFLOP 稀疏 FP4，但带宽是短板 —— GPT-OSS 120B 实测 decode **~33 tok/s**、20B 约 **50 tok/s**（prefill 2053 tok/s）[23] |
+
+> **两列口径说明**
+> - **参考价**：2026-09 美元，含税前裸卡/整机；消费卡街价波动极大（5090 一度冲到 $6,900），报价只看量级不看小数点。[25]
+> - **占有率**：**没有"按型号统计的 LLM 推理装机量"这种公开数据**。消费卡一列用的是 **Steam 硬件调查**（游戏装机口径，2026-04/06），只能当相对热度参考；数据中心一列是定性描述 —— 厂商级口径是 **NVIDIA 占 AI 加速器约 80%、AMD Instinct 约 5–7%**，逐型号份额未公开。[26]
 
 **读表要点**
 
@@ -233,9 +236,11 @@ Apple Silicon 追极限             → mlx-lm（或 Ollama 0.19+ 自动走 MLX�
 | [20] | [GPU Buying Guide for LLMs: RTX 5090 vs H100 vs H200 · Prem AI](https://www.premai.io/blog/gpu-buying-guide-for-llms-rtx-5090-vs-h100-vs-h200-complete-comparison-2026/) / [RTX 5090 vs RTX PRO 6000 Blackwell · Spheron](https://www.spheron.network/blog/rtx-5090-vs-rtx-pro-6000-blackwell-comparison/) |
 | [21] | [GPU Benchmarks for LLM Inference: RTX, H100, B200 · CloudRift](https://www.cloudrift.ai/gpu-benchmarks) / [RTX PRO 6000 vs H100/H200/L40S · CloudRift](https://www.cloudrift.ai/blog/benchmarking-rtx6000-vs-datacenter-gpus) |
 | [22] | [GPU Benchmark for AI and LLM Inference 2026 · VRLA Tech](https://vrlatech.com/gpu-benchmark-ai-llm-2026/) |
+| [25] | [GPU 价格追踪 2026 · Tom's Hardware](https://www.tomshardware.com/pc-components/gpus/lowest-gpu-prices-tracking) / [NVIDIA AI GPU 定价指南 · IntuitionLabs](https://intuitionlabs.ai/articles/nvidia-ai-gpu-pricing-guide) / [RTX PRO 6000 涨价至 $13,250 · MLQ](https://mlq.ai/news/nvidia-raises-rtx-pro-6000-blackwell-msrp-to-13250-a-55-hike-in-one-year/) / [DGX Spark 涨价至 $4,700 · TechPowerUp](https://www.techpowerup.com/346833/nvidia-raises-dgx-spark-pricing-to-usd-4-700) |
+| [26] | [2026-04 Steam 硬件调查趋势 · The FPS Review](https://www.thefpsreview.com/2026/05/02/trends-from-the-april-2026-steam-hardware-survey/) / [NVIDIA AI GPU 市占 ~80% · Silicon Analysts](https://siliconanalysts.com/analysis/nvidia-ai-accelerator-market-share-2024-2026) |
 | [24] | [Best AMD GPU for Local LLM Inference 2026 · Compute Market](https://www.compute-market.com/blog/best-amd-gpu-local-llm-inference-2026) / [AMD ROCm Local LLM Setup: 96 tok/s on RX 7900 XTX](https://localaimaster.com/blog/amd-rocm-local-llm-setup) / [ROCm vs CUDA 2026 · Spheron](https://www.spheron.network/blog/rocm-vs-cuda-gpu-cloud-2026/) |
 | [23] | [NVIDIA DGX Spark In-Depth Review · LMSYS](https://www.lmsys.org/blog/2025-10-13-nvidia-dgx-spark/) / [DGX Spark 产品页 · NVIDIA](https://www.nvidia.com/en-us/products/workstations/dgx-spark/) / [The Performance of NVIDIA DGX Spark · NADDOD](https://www.naddod.com/blog/the-performance-of-nvidia-dgx-spark) |
 
 > ⚠️ 核实提示：本页性能数字来自第三方 benchmark 博客，**测试环境（GPU 型号、模型、序列长度、并发数）各不相同，不可直接横向相加**。SGLang 的用户名单（xAI/Azure/LinkedIn/Cursor、400k+ GPU）来自 [5]，对外引用前建议找 SGLang 官方 blog 或对应公司工程博客二次确认。
 >
-> ⚠️ **§1.7 天梯图**：显存与带宽为厂商标称规格；"Q4 能装下"一列是按 `0.55~0.6 B/参数` 估算的**工程经验值，未计入 KV cache**，实际选型必须按目标上下文长度重算。decode ≈ 带宽 ÷ 权重字节数 这条经验公式只在 **memory-bound（小 batch）** 时成立，大 batch 下转为 compute-bound，不再适用。
+> ⚠️ **§1.7 天梯图**：显存与带宽为厂商标称规格；"Q4 能装下"一列是按 `0.55~0.6 B/参数` 估算的**工程经验值，未计入 KV cache**，实际选型必须按目标上下文长度重算；表中「· 上下文」一列是按权重占用后剩余显存反推的**量级估算**，不是实测值。decode ≈ 带宽 ÷ 权重字节数 这条经验公式只在 **memory-bound（小 batch）** 时成立，大 batch 下转为 compute-bound，不再适用。

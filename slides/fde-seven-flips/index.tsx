@@ -833,6 +833,8 @@ const Rung = ({
   bw,
   bwBar,
   fit,
+  price,
+  share,
   first,
   accent,
 }: {
@@ -842,34 +844,36 @@ const Rung = ({
   bw: string;
   bwBar: number;
   fit: string;
+  price: string;
+  share: string;
   first?: boolean;
   accent?: boolean;
 }) => (
   <div
     style={{
       display: 'flex',
-      gap: 20,
+      gap: 16,
       alignItems: 'center',
-      padding: '8px 0',
-      borderTop: first ? `2px solid ${accent ? 'var(--osd-accent)' : rule}` : `1px solid #17181c`,
+      padding: '6px 0',
+      borderTop: first ? `2px solid ${accent ? 'var(--osd-accent)' : rule}` : '1px solid #17181c',
     }}
   >
     <div
       style={{
-        width: 150,
+        width: 128,
         flexShrink: 0,
         fontFamily: MONO,
         fontSize: 17,
-        letterSpacing: '0.1em',
+        letterSpacing: '0.08em',
         color: accent ? 'var(--osd-accent)' : muted,
       }}
     >
       {first ? tier : ''}
     </div>
-    <div style={{ width: 280, flexShrink: 0, fontSize: 22, fontWeight: accent ? 700 : 500 }}>{gpu}</div>
+    <div style={{ width: 268, flexShrink: 0, fontSize: 22, fontWeight: accent ? 700 : 500 }}>{gpu}</div>
     <div
       style={{
-        width: 100,
+        width: 92,
         flexShrink: 0,
         fontFamily: MONO,
         fontSize: 20,
@@ -879,17 +883,15 @@ const Rung = ({
     >
       {vram}
     </div>
-    <div style={{ width: 420, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 12 }}>
-      <div
-        style={{
-          width: bwBar,
-          height: 13,
-          background: accent ? 'var(--osd-accent)' : '#3a3d44',
-        }}
-      />
+    <div style={{ width: 330, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 12 }}>
+      <div style={{ width: bwBar, height: 13, background: accent ? 'var(--osd-accent)' : '#3a3d44' }} />
       <span style={{ fontFamily: MONO, fontSize: 18, color: muted }}>{bw}</span>
     </div>
-    <div style={{ flex: 1, fontSize: 21, color: dim, lineHeight: 1.25 }}>{fit}</div>
+    <div style={{ width: 186, flexShrink: 0, fontFamily: MONO, fontSize: 20, color: dim }}>{fit}</div>
+    <div style={{ width: 210, flexShrink: 0, fontFamily: MONO, fontSize: 19, color: 'var(--osd-text)' }}>
+      {price}
+    </div>
+    <div style={{ flex: 1, fontFamily: MONO, fontSize: 18, color: muted, textAlign: 'right' }}>{share}</div>
   </div>
 );
 
@@ -900,37 +902,41 @@ const S6c: Page = () => (
       <div
         style={{
           display: 'flex',
-          gap: 20,
+          gap: 16,
           fontFamily: MONO,
           fontSize: 17,
           color: muted,
-          letterSpacing: '0.12em',
+          letterSpacing: '0.1em',
           paddingBottom: 6,
         }}
       >
-        <span style={{ width: 150 }}>档位</span>
-        <span style={{ width: 280 }}>型号</span>
-        <span style={{ width: 100, textAlign: 'right' }}>显存</span>
-        <span style={{ width: 420 }}>显存带宽</span>
-        <span style={{ flex: 1 }}>Q4 单卡能装下</span>
+        <span style={{ width: 128 }}>档位</span>
+        <span style={{ width: 268 }}>型号</span>
+        <span style={{ width: 92, textAlign: 'right' }}>显存</span>
+        <span style={{ width: 330 }}>显存带宽</span>
+        <span style={{ width: 186 }}>Q4 · 上下文</span>
+        <span style={{ width: 210 }}>参考价 USD</span>
+        <span style={{ flex: 1, textAlign: 'right' }}>占有率 / 装机</span>
       </div>
-      <Rung first tier="T0 数据中心" gpu="B200" vram="192 GB" bw="8.0 TB/s" bwBar={330} fit="200B+ 稠密 / 超大 MoE" />
-      <Rung tier="" gpu="H200" vram="141 GB" bw="4.8 TB/s" bwBar={198} fit="120B 级" />
-      <Rung tier="" gpu="H100" vram="80 GB" bw="3.35 TB/s" bwBar={138} fit="70B 舒适" />
-      <Rung first accent tier="T1 专业单卡" gpu="RTX PRO 6000 Blackwell" vram="96 GB" bw="1792 GB/s" bwBar={74} fit="70B FP16 / 109B 级 MoE Q4" />
-      <Rung tier="" gpu="A100 80G" vram="80 GB" bw="2.0 TB/s" bwBar={82} fit="70B" />
-      <Rung tier="" gpu="L40S / RTX 6000 Ada" vram="48 GB" bw="864–960 GB/s" bwBar={38} fit="32B 舒适，70B 勉强" />
-      <Rung first accent tier="T2 消费旗舰" gpu="RTX 5090" vram="32 GB" bw="1792 GB/s" bwBar={74} fit="70B Q4 单卡可跑" />
-      <Rung tier="" gpu="RTX 4090" vram="24 GB" bw="1008 GB/s" bwBar={42} fit="32B 舒适" />
-      <Rung tier="" gpu="Radeon RX 7900 XTX" vram="24 GB" bw="960 GB/s" bwBar={40} fit="A 卡旗舰，约 4090 的 75%" />
-      <Rung first tier="T3 消费中端" gpu="RTX 5080 / 4070 Ti S" vram="16 GB" bw="672–960 GB/s" bwBar={30} fit="14B 舒适" />
-      <Rung tier="" gpu="RTX 3060 12G" vram="12 GB" bw="360 GB/s" bwBar={15} fit="7–8B，入门门槛" />
-      <Rung first tier="T4 统一内存" gpu="Mac M3 Ultra" vram="512 GB" bw="819 GB/s" bwBar={34} fit="容量无敌，带宽一般：超大 MoE" />
-      <Rung tier="" gpu="Mac M4 / M5 Max" vram="128 GB" bw="546 GB/s" bwBar={23} fit="70B Q4" />
-      <Rung tier="" gpu="NVIDIA DGX Spark (GB10)" vram="128 GB" bw="273 GB/s" bwBar={11} fit="120B 级装得下，decode 仅 ~33 tok/s" />
+      <Rung first tier="T0 数据中心" gpu="B200" vram="192 GB" bw="8.0 TB/s" bwBar={248} fit="200B · 128K" price="3.0–5.0 万" share="云厂新增主力" />
+      <Rung gpu="H200" vram="141 GB" bw="4.8 TB/s" bwBar={149} fit="120B · 64K" price="~3.1 万" share="租赁最普及" />
+      <Rung gpu="H100" vram="80 GB" bw="3.35 TB/s" bwBar={104} fit="70B · 32K" price="2.5–4.0 万" share="存量最大" />
+      <Rung first accent tier="T1 专业单卡" gpu="RTX PRO 6000 Blackwell" vram="96 GB" bw="1792 GB/s" bwBar={56} fit="70B · 64K" price="1.33 万" share="单机首选" />
+      <Rung gpu="A100 80G" vram="80 GB" bw="2.0 TB/s" bwBar={62} fit="70B · 32K" price="二手 0.8–1.2 万" share="存量退役中" />
+      <Rung gpu="L40S / RTX 6000 Ada" vram="48 GB" bw="864–960 GB/s" bwBar={29} fit="32B · 32K" price="无公开报价" share="机架常见" />
+      <Rung first accent tier="T2 消费旗舰" gpu="RTX 5090" vram="32 GB" bw="1792 GB/s" bwBar={56} fit="32B · 64K" price="街价 3,700+" share="Steam 0.41%" />
+      <Rung gpu="RTX 4090" vram="24 GB" bw="1008 GB/s" bwBar={31} fit="32B · 16K" price="二手 1,200–1,500" share="Steam 0.90%" />
+      <Rung gpu="Radeon RX 7900 XTX" vram="24 GB" bw="960 GB/s" bwBar={30} fit="32B · 16K" price="749–899" share="A 卡旗舰" />
+      <Rung first tier="T3 消费中端" gpu="RTX 5080 / 4070 Ti S" vram="16 GB" bw="672–960 GB/s" bwBar={23} fit="14B · 32K" price="~1,000 起" share="50 系合计 13.4%" />
+      <Rung gpu="RTX 3060 12G" vram="12 GB" bw="360 GB/s" bwBar={11} fit="8B · 16K" price="二手 ~250" share="Steam 第一 3.99%" />
+      <Rung first tier="T4 统一内存" gpu="Mac M3 Ultra" vram="512 GB" bw="819 GB/s" bwBar={25} fit="235B · 128K" price="~0.95 万" share="不在统计内" />
+      <Rung gpu="Mac M4 / M5 Max" vram="128 GB" bw="546 GB/s" bwBar={17} fit="70B · 64K" price="0.40–0.50 万" share="不在统计内" />
+      <Rung gpu="NVIDIA DGX Spark (GB10)" vram="128 GB" bw="273 GB/s" bwBar={8} fit="120B · 32K" price="4,699" share="不在统计内" />
     </div>
-    <div style={{ fontFamily: MONO, fontSize: 17, color: muted, marginTop: 12 }}>
-      柱长按带宽真实比例 · decode ≈ 带宽 ÷ 每 token 权重字节数（仅小 batch 成立）· 未计 KV cache · A 卡按 ROCm 7.2 起算 · docs/research/02 §1.7
+    <div style={{ fontFamily: MONO, fontSize: 16, color: muted, marginTop: 10, lineHeight: 1.4 }}>
+      柱长按带宽真实比例 · 上下文为按剩余显存反推的量级估算 · 价格为 2026-09 参考量级，消费卡街价波动极大
+      <br />
+      占有率：消费卡为 Steam 硬件调查（游戏装机口径），数据中心无逐型号公开数据 · docs/research/02 §1.7
     </div>
   </Shell>
 );
