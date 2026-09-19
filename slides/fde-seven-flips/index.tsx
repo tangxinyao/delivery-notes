@@ -918,12 +918,11 @@ const S6c: Page = () => (
         <span style={{ width: 210 }}>参考价 USD</span>
         <span style={{ flex: 1, textAlign: 'right' }}>占有率 / 装机</span>
       </div>
-      <Rung first tier="T0 数据中心" gpu="B200" vram="192 GB" bw="8.0 TB/s" bwBar={248} fit="200B · 128K" price="3.0–5.0 万" share="云厂新增主力" />
+      <Rung first tier="T0 数据中心" gpu="B300 (Blackwell Ultra)" vram="288 GB" bw="8.0 TB/s" bwBar={248} fit="235B · 256K" price="~4.0 万" share="2026-01 起量产" />
+      <Rung gpu="B200" vram="192 GB" bw="8.0 TB/s" bwBar={248} fit="200B · 128K" price="3.0–5.0 万" share="云厂新增主力" />
       <Rung gpu="H200" vram="141 GB" bw="4.8 TB/s" bwBar={149} fit="120B · 64K" price="~3.1 万" share="租赁最普及" />
-      <Rung gpu="H100" vram="80 GB" bw="3.35 TB/s" bwBar={104} fit="70B · 32K" price="2.5–4.0 万" share="存量最大" />
       <Rung first accent tier="T1 专业单卡" gpu="RTX PRO 6000 Blackwell" vram="96 GB" bw="1792 GB/s" bwBar={56} fit="70B · 64K" price="1.33 万" share="单机首选" />
       <Rung gpu="A100 80G" vram="80 GB" bw="2.0 TB/s" bwBar={62} fit="70B · 32K" price="二手 0.8–1.2 万" share="存量退役中" />
-      <Rung gpu="L40S / RTX 6000 Ada" vram="48 GB" bw="864–960 GB/s" bwBar={29} fit="32B · 32K" price="无公开报价" share="机架常见" />
       <Rung first accent tier="T2 消费旗舰" gpu="RTX 5090" vram="32 GB" bw="1792 GB/s" bwBar={56} fit="32B · 64K" price="街价 3,700+" share="Steam 0.41%" />
       <Rung gpu="RTX 4090" vram="24 GB" bw="1008 GB/s" bwBar={31} fit="32B · 16K" price="二手 1,200–1,500" share="Steam 0.90%" />
       <Rung gpu="Radeon RX 7900 XTX" vram="24 GB" bw="960 GB/s" bwBar={30} fit="32B · 16K" price="749–899" share="A 卡旗舰" />

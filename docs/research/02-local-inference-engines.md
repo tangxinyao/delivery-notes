@@ -80,12 +80,11 @@ decode 吞吐 (tok/s) ≈ 显存带宽 (GB/s) ÷ 每 token 读取的权重字节
 
 | 档位 | 型号 | 显存 | 带宽 | Q4 装得下 · 上下文 | 参考价（2026-09） | 占有率 / 装机 | 典型定位 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| **T0 数据中心旗舰** | **B200** | 192 GB HBM3e | **~8.0 TB/s** | 200B · 128K | **$3.0–5.0 万** | 云厂新增主力 | 长上下文吞吐为 RTX PRO 6000 的 **~4.9×** [21] |
+| **T0 数据中心旗舰** | **B300**（Blackwell Ultra） | **288 GB** HBM3e | **~8.0 TB/s** | 235B · 256K | ~$4.0 万 | 2026-01 起量产 | 当前容量天花板：显存比 B200 多 **50%**、是 H200 的 **2×**；**15 PFLOPS 稠密 NVFP4** [27] |
+| | **B200** | 192 GB HBM3e | ~8.0 TB/s | 200B · 128K | $3.0–5.0 万 | 云厂新增主力 | 长上下文吞吐为 RTX PRO 6000 的 **~4.9×** [21] |
 | | **H200** | 141 GB HBM3e | ~4.8 TB/s | 120B · 64K | ~$3.1 万 | 租赁最普及 | 生产集群主力 |
-| | **H100** | 80 GB HBM3 | ~3.35 TB/s | 70B · 32K | $2.5–4.0 万 | 存量最大 | 上一代生产基线 |
 | **T1 专业单卡** | **RTX PRO 6000 Blackwell** | **96 GB** GDDR7 ECC | 1792 GB/s | 70B · 64K | **$1.33 万**（MSRP，一年涨 55%）| 单机首选 | 单机最优性价比；30B 上 **~8425 tok/s**，约 5090 的 **1.8×** [21][22] |
 | | **A100 80G** | 80 GB HBM2e | ~2.0 TB/s | 70B · 32K | 二手 $0.8–1.2 万 | 存量退役中 | 上上代集群 |
-| | **L40S / RTX 6000 Ada** | 48 GB | 864 / 960 GB/s | 32B · 32K | 无稳定公开报价 | 机架常见 | 企业机架推理卡 |
 | **T2 消费旗舰** | **RTX 5090** | 32 GB GDDR7 | **1792 GB/s** | 32B · 64K | MSRP $1,999 / **街价 $3,700+** | Steam **0.41%** | 带宽比 4090 高 **77%**；小 batch 下每卡吞吐与 PRO 6000 接近 [20][21] |
 | | **RTX 4090** | 24 GB | 1008 GB/s | 32B · 16K | 二手 $1,200–1,500（已停产）| Steam **0.90%** | 上一代发烧基线 |
 | | **Radeon RX 7900 XTX** | 24 GB | 960 GB/s | 32B · 16K | **$749–899** | A 卡旗舰 | Llama 3.1 8B 约 **96 tok/s**，约为 4090 的 **75%**；单位显存最便宜 [24] |
@@ -237,6 +236,7 @@ Apple Silicon 追极限             → mlx-lm（或 Ollama 0.19+ 自动走 MLX�
 | [21] | [GPU Benchmarks for LLM Inference: RTX, H100, B200 · CloudRift](https://www.cloudrift.ai/gpu-benchmarks) / [RTX PRO 6000 vs H100/H200/L40S · CloudRift](https://www.cloudrift.ai/blog/benchmarking-rtx6000-vs-datacenter-gpus) |
 | [22] | [GPU Benchmark for AI and LLM Inference 2026 · VRLA Tech](https://vrlatech.com/gpu-benchmark-ai-llm-2026/) |
 | [25] | [GPU 价格追踪 2026 · Tom's Hardware](https://www.tomshardware.com/pc-components/gpus/lowest-gpu-prices-tracking) / [NVIDIA AI GPU 定价指南 · IntuitionLabs](https://intuitionlabs.ai/articles/nvidia-ai-gpu-pricing-guide) / [RTX PRO 6000 涨价至 $13,250 · MLQ](https://mlq.ai/news/nvidia-raises-rtx-pro-6000-blackwell-msrp-to-13250-a-55-hike-in-one-year/) / [DGX Spark 涨价至 $4,700 · TechPowerUp](https://www.techpowerup.com/346833/nvidia-raises-dgx-spark-pricing-to-usd-4-700) |
+| [27] | [NVIDIA Blackwell Ultra B300 规格 · Server-Parts](https://www.server-parts.eu/post/nvidia-b300-gpu-blackwell-ultra-architecture) / [B300 指南与定价 · Spheron](https://www.spheron.network/blog/nvidia-b300-blackwell-ultra-guide/) / [Blackwell Ultra 288GB HBM3e · The Register](https://www.theregister.com/2025/03/18/nvidia_blackwell_ultra/) |
 | [26] | [2026-04 Steam 硬件调查趋势 · The FPS Review](https://www.thefpsreview.com/2026/05/02/trends-from-the-april-2026-steam-hardware-survey/) / [NVIDIA AI GPU 市占 ~80% · Silicon Analysts](https://siliconanalysts.com/analysis/nvidia-ai-accelerator-market-share-2024-2026) |
 | [24] | [Best AMD GPU for Local LLM Inference 2026 · Compute Market](https://www.compute-market.com/blog/best-amd-gpu-local-llm-inference-2026) / [AMD ROCm Local LLM Setup: 96 tok/s on RX 7900 XTX](https://localaimaster.com/blog/amd-rocm-local-llm-setup) / [ROCm vs CUDA 2026 · Spheron](https://www.spheron.network/blog/rocm-vs-cuda-gpu-cloud-2026/) |
 | [23] | [NVIDIA DGX Spark In-Depth Review · LMSYS](https://www.lmsys.org/blog/2025-10-13-nvidia-dgx-spark/) / [DGX Spark 产品页 · NVIDIA](https://www.nvidia.com/en-us/products/workstations/dgx-spark/) / [The Performance of NVIDIA DGX Spark · NADDOD](https://www.naddod.com/blog/the-performance-of-nvidia-dgx-spark) |
