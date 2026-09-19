@@ -804,7 +804,7 @@ const S4a2: Page = () => (
         <Step>
           <Row
             k="实证"
-            v="AppFolio 的 Realm-X 从换成 LangGraph 显式编排后，回答准确率翻倍。"
+            v="AppFolio 的 Realm-X 换成 LangGraph 显式编排后，回答准确率翻倍。"
             src="LangChain 客户案例"
           />
         </Step>
@@ -983,12 +983,12 @@ const S4a4: Page = () => (
 const S4a5: Page = () => (
   <Case
     eyebrow="04 · 非 ReAct 范式 ②"
-    heading="客服：分诊图跑主干，模型只管理解"
+    heading="客服：代码分流，模型只管理解"
     src={klarnaShot}
     caption="Klarna AI Assistant / Vodafone-Fastweb Super TOBi"
   >
-    <Beat k="形态" v="分诊 → 查账户 → 命中固定动作 → 生成话术 → 兜底转人工。" />
-    <Beat k="模型位置" v="进口的意图理解和出口的措辞，中间全是确定性调用。" />
+    <Beat k="形态" v="分流 → 查账户 → 命中固定动作 → 生成话术 → 兜底转人工。" />
+    <Beat k="模型位置" v="除了意图理解和输出的措辞，中间全是确定性调用。" />
     <Beat k="Klarna" v="覆盖 8500 万活跃用户，客户问题解决时长降低 80%。" />
     <Beat k="Super TOBi" v="服务近 950 万客户，正确率 90%，自助解决率 82%。" />
     <div style={{ fontFamily: MONO, fontSize: 19, color: muted, marginTop: 24 }}>
@@ -1017,7 +1017,7 @@ const S4a6: Page = () => (
 
 const S4b: Page = () => (
   <Shell eyebrow="04 · 消除不确定性">
-    <Heading>真到了动态编排，才比架构</Heading>
+    <Heading>动态编排</Heading>
     <div style={{ marginTop: 44 }}>
       <Steps>
         <Step>
@@ -1154,50 +1154,49 @@ const Why = ({
 
 const S6a: Page = () => (
   <Shell eyebrow="06 · 先问数据出不出域">
-    <Heading>本地部署不是技术偏好，是三条硬约束</Heading>
+    <Heading>本地部署</Heading>
     <div style={{ display: 'flex', gap: 60, marginTop: 48 }}>
       <Why
         tag="合规"
-        title="法规不许出域"
+        title="合规要求"
         lines={['国防 / 军工：绝对不可，涉保密等级', '金融：监管、审计留痕、幻觉责任', '医疗：HIPAA 类，数据必须脱敏']}
         accent
       />
       <Why
         tag="隐私"
-        title="出域了就收不回"
+        title="数据泄露风险"
         lines={['客户内网数据进第三方 API，无法举证已删除', '断网 / 边缘场景根本没有出域这个选项', '端侧才能做到“数据不离开设备”']}
+        accent
       />
       <Why
         tag="成本"
-        title="高频调用算得过来"
-        lines={['cost per task 随调用量线性涨', '固定负载下自建摊薄成单位电费', '但低频场景自建更贵——别默认本地']}
+        title="高频调用"
+        lines={['cost per task 随调用量线性涨', '固定负载下自建摊薄成单位电费', '低频场景自建更贵，所以不用默认本地']}
+        accent
       />
-    </div>
-    <div style={{ fontSize: 30, color: muted, marginTop: 44 }}>
-      三条里只要命中一条，本地就是硬前提；一条都不命中，托管 API 更划算。
     </div>
   </Shell>
 );
 
 const S6b: Page = () => (
   <Shell eyebrow="06 · 先问数据出不出域">
-    <Heading>谁必须本地，谁不必</Heading>
+    <Heading>场景</Heading>
     <div style={{ marginTop: 36 }}>
       <Steps>
         <Step>
-          <Row k="国防 / 军工" v="绝对不出域。本地推理 + local agent，断网可用。" src="纯本地 / 边缘" />
+          <Row k="国防 / 军工" v="本地推理 + local agent，断网可用。" src="纯本地 / 边缘" />
         </Step>
         <Step>
-          <Row k="金融" v="基本不出域。私有云 + 强 guardrails + 全轨迹可观测。" src="本地 / 私有云" />
+          <Row k="金融" v="私有云 + 强 guardrails + 全轨迹可观测。" src="本地 / 私有云" />
         </Step>
         <Step>
-          <Row k="医疗" v="不可出域。本地 + 人在环，幻觉率是第一指标。" src="本地" />
+          <Row k="医疗" v="本地推理 + 人，幻觉率是第一指标。" src="本地" />
         </Step>
         <Step>
-          <Row k="制造 / 能源" v="部分可。边缘做实时推理，云端做训练与聚合。" src="边缘 + 云" />
+          <Row k="制造 / 能源" v="部分可上云，边缘做实时推理，云端做训练与聚合。" src="边缘 + 云" />
         </Step>
         <Step>
-          <Row k="通用企业流程" v="可出域。要的是速度和 ROI，别自建。" src="云" />
+          <Row k="通用企业流程" v="可上云。" src="云" />
         </Step>
       </Steps>
     </div>
@@ -1276,7 +1275,7 @@ const Rung = ({
 
 const S6c: Page = () => (
   <Shell eyebrow="06 · 显卡天梯图">
-    <Heading>显存决定能不能跑，带宽决定跑多快</Heading>
+    <Heading>显卡天梯图</Heading>
     <div style={{ marginTop: 20 }}>
       <div
         style={{
@@ -1640,7 +1639,7 @@ const Closing: Page = () => {
         >
           模型早就够用了。
           <br />
-          卡的是最后一公里。
+          交付是最后一公里。
         </div>
       </div>
     </div>
