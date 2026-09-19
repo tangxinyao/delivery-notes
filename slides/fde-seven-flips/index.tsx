@@ -922,6 +922,7 @@ const S6c: Page = () => (
       <Rung tier="" gpu="L40S / RTX 6000 Ada" vram="48 GB" bw="864–960 GB/s" bwBar={38} fit="32B 舒适，70B 勉强" />
       <Rung first accent tier="T2 消费旗舰" gpu="RTX 5090" vram="32 GB" bw="1792 GB/s" bwBar={74} fit="70B Q4 单卡可跑" />
       <Rung tier="" gpu="RTX 4090" vram="24 GB" bw="1008 GB/s" bwBar={42} fit="32B 舒适" />
+      <Rung tier="" gpu="Radeon RX 7900 XTX" vram="24 GB" bw="960 GB/s" bwBar={40} fit="A 卡旗舰，约 4090 的 75%" />
       <Rung first tier="T3 消费中端" gpu="RTX 5080 / 4070 Ti S" vram="16 GB" bw="672–960 GB/s" bwBar={30} fit="14B 舒适" />
       <Rung tier="" gpu="RTX 3060 12G" vram="12 GB" bw="360 GB/s" bwBar={15} fit="7–8B，入门门槛" />
       <Rung first tier="T4 统一内存" gpu="Mac M3 Ultra" vram="512 GB" bw="819 GB/s" bwBar={34} fit="容量无敌，带宽一般：超大 MoE" />
@@ -929,7 +930,7 @@ const S6c: Page = () => (
       <Rung tier="" gpu="NVIDIA DGX Spark (GB10)" vram="128 GB" bw="273 GB/s" bwBar={11} fit="120B 级装得下，decode 仅 ~33 tok/s" />
     </div>
     <div style={{ fontFamily: MONO, fontSize: 17, color: muted, marginTop: 12 }}>
-      柱长按带宽真实比例 · decode ≈ 带宽 ÷ 每 token 权重字节数（仅小 batch 成立）· 未计 KV cache · docs/research/02 §1.7
+      柱长按带宽真实比例 · decode ≈ 带宽 ÷ 每 token 权重字节数（仅小 batch 成立）· 未计 KV cache · A 卡按 ROCm 7.2 起算 · docs/research/02 §1.7
     </div>
   </Shell>
 );

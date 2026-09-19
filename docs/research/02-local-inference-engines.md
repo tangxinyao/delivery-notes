@@ -88,6 +88,7 @@ decode 吞吐 (tok/s) ≈ 显存带宽 (GB/s) ÷ 每 token 读取的权重字节
 | | **L40S / RTX 6000 Ada** | 48 GB | 864 / 960 GB/s | 32B 舒适，70B 勉强 | 企业机架推理卡 |
 | **T2 消费旗舰** | **RTX 5090** | 32 GB GDDR7 | **1792 GB/s** | **70B Q4 单卡可跑** | 带宽比 4090 高 **77%**；小 batch 下每卡吞吐与 PRO 6000 接近 [20][21] |
 | | **RTX 4090** | 24 GB | 1008 GB/s | 32B 舒适 | 上一代发烧基线 |
+| | **Radeon RX 7900 XTX** | 24 GB | 960 GB/s | 32B 舒适，70B Q4 需压紧 KV cache | **A 卡旗舰**：Llama 3.1 8B 约 **96 tok/s**，约为 4090 的 **75%**，但价格低不少 [24] |
 | **T3 消费中端** | **RTX 5080** | 16 GB | 960 GB/s | 14B 舒适 | 单人开发机 |
 | | **RTX 4070 Ti S** | 16 GB | 672 GB/s | 14B | — |
 | | **RTX 3060 12G** | 12 GB | 360 GB/s | 7–8B | 入门门槛 |
@@ -103,6 +104,7 @@ decode 吞吐 (tok/s) ≈ 显存带宽 (GB/s) ÷ 每 token 读取的权重字节
 4. **多卡不是线性叠加**。要靠张量并行才能把多卡显存合并使用，而 **llama.cpp / Ollama 不做张量并行**（见 §1.4）—— 多卡必须上 vLLM / SGLang / ExLlamaV2。
 5. **统一内存是另一个维度**：M3 Ultra 的 512 GB 能装下任何消费级 GPU 装不下的模型，但 819 GB/s 的带宽决定了它 decode 慢于 5090。**容量优先选统一内存，速度优先选 N 卡。**
 6. **DGX Spark 是「能跑」而不是「跑得快」的典型**。算力（1 PFLOP FP4，约在 RTX 5070 与 5070 Ti 之间）和 128 GB 容量都不差，但 **273 GB/s 的带宽是全表最低**，按本节公式直接锁死 decode 上限 —— 所以 120B 模型只有 ~33 tok/s。**它的定位是本地装得下大模型做开发与微调，不是拿来扛并发生产流量。** 客户拿它当推理服务器是常见误判。[23]
+7. **A 卡不再是禁区，但要认软件栈**。同为 24 GB，7900 XTX 的带宽（960 GB/s）与 4090（1008 GB/s）几乎持平，**ROCm 上实测约为 CUDA 的 75–85%**，且模型越大、越 memory-bound，差距越小。**ROCm 7.2（2026-03）是第一个让 Ollama / LM Studio / llama.cpp / vLLM 开箱即与 CUDA 对齐的版本**；vLLM 与 SGLang 均已官方支持 ROCm。结论：**预算敏感、单卡、模型偏大的场景，A 卡值得进候选**；要用冷门算子或最新特性时仍以 N 卡为稳。[24]
 
 ---
 
@@ -231,6 +233,7 @@ Apple Silicon 追极限             → mlx-lm（或 Ollama 0.19+ 自动走 MLX�
 | [20] | [GPU Buying Guide for LLMs: RTX 5090 vs H100 vs H200 · Prem AI](https://www.premai.io/blog/gpu-buying-guide-for-llms-rtx-5090-vs-h100-vs-h200-complete-comparison-2026/) / [RTX 5090 vs RTX PRO 6000 Blackwell · Spheron](https://www.spheron.network/blog/rtx-5090-vs-rtx-pro-6000-blackwell-comparison/) |
 | [21] | [GPU Benchmarks for LLM Inference: RTX, H100, B200 · CloudRift](https://www.cloudrift.ai/gpu-benchmarks) / [RTX PRO 6000 vs H100/H200/L40S · CloudRift](https://www.cloudrift.ai/blog/benchmarking-rtx6000-vs-datacenter-gpus) |
 | [22] | [GPU Benchmark for AI and LLM Inference 2026 · VRLA Tech](https://vrlatech.com/gpu-benchmark-ai-llm-2026/) |
+| [24] | [Best AMD GPU for Local LLM Inference 2026 · Compute Market](https://www.compute-market.com/blog/best-amd-gpu-local-llm-inference-2026) / [AMD ROCm Local LLM Setup: 96 tok/s on RX 7900 XTX](https://localaimaster.com/blog/amd-rocm-local-llm-setup) / [ROCm vs CUDA 2026 · Spheron](https://www.spheron.network/blog/rocm-vs-cuda-gpu-cloud-2026/) |
 | [23] | [NVIDIA DGX Spark In-Depth Review · LMSYS](https://www.lmsys.org/blog/2025-10-13-nvidia-dgx-spark/) / [DGX Spark 产品页 · NVIDIA](https://www.nvidia.com/en-us/products/workstations/dgx-spark/) / [The Performance of NVIDIA DGX Spark · NADDOD](https://www.naddod.com/blog/the-performance-of-nvidia-dgx-spark) |
 
 > ⚠️ 核实提示：本页性能数字来自第三方 benchmark 博客，**测试环境（GPU 型号、模型、序列长度、并发数）各不相同，不可直接横向相加**。SGLang 的用户名单（xAI/Azure/LinkedIn/Cursor、400k+ GPU）来自 [5]，对外引用前建议找 SGLang 官方 blog 或对应公司工程博客二次确认。
